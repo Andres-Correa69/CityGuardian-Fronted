@@ -1,0 +1,35 @@
+.login-bg {
+  background: #4682b4;
+  min-height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.login-card {
+  background: #fff;
+  border: 3px solid #b39ddb;
+  box-shadow: 0 8px 24px rgba(44, 62, 80, 0.1);
+}
+
+.login-card .form-label {
+  color: #5c8ecf;
+}
+
+.login-card .btn-primary {
+  background: #5c8ecf;
+  border: none;
+}
+
+.login-card .btn-primary:hover {
+  background: #3b6ca8;
+}
+
+.login-card a {
+  text-decoration: none;
+}
+
+.login-card a:hover {
+  text-decoration: underline;
+}
