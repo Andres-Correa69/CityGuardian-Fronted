@@ -1,0 +1,45 @@
+.verification-bg {
+  background: #4a7bb7;
+  min-height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.verification-card {
+  background: #fff;
+  border: 3px solid #b39ddb;
+  box-shadow: 0 8px 24px rgba(44, 62, 80, 0.1);
+}
+
+.verification-card .form-label {
+  color: #222;
+  font-weight: 500;
+}
+
+.verification-card .btn-link {
+  color: #222;
+  text-decoration: underline;
+}
+
+.verification-card .btn-link:hover {
+  color: #4a7bb7;
+}
+
+.verification-card .btn {
+  background: #4a7bb7;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+}
+
+.verification-card .btn:hover {
+  background: #356094;
+}
+
+h2 {
+  font-weight: 700;
+  color: #4a7bb7;
+}

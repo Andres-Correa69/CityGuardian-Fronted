@@ -8,18 +8,24 @@
       <!-- Formulario -->
       <div class="flex-grow-1 d-flex flex-column justify-content-center" style="width: 50%;">
         <h2 class="fw-bold mb-3 text-primary">Inicio de sesión</h2>
-        <form>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
           <div class="mb-3">
             <label for="usuario" class="form-label fw-semibold">Usuario</label>
-            <input type="text" class="form-control" id="usuario" placeholder="Usuario">
+            <input type="text" class="form-control" id="usuario" formControlName="usuario" placeholder="Usuario">
+            <div *ngIf="loginForm.get('usuario')?.touched && loginForm.get('usuario')?.invalid" class="text-danger small">
+              El usuario es obligatorio.
+            </div>
           </div>
           <div class="mb-2">
             <label for="password" class="form-label fw-semibold">
               <i class="bi bi-lock"></i> Contraseña
             </label>
             <div class="input-group">
-              <input type="password" class="form-control" id="password" placeholder="Contraseña">
+              <input type="password" class="form-control" id="password" formControlName="password" placeholder="Contraseña">
               <span class="input-group-text"><i class="bi bi-eye"></i></span>
+            </div>
+            <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="text-danger small">
+              La contraseña es obligatoria.
             </div>
           </div>
           <div class="mb-2">
@@ -29,7 +35,7 @@
         </form>
         <div class="text-center mt-2">
           <span class="fw-bold">¡Aun no tienes cuenta!</span><br>
-          <a href="#" class="small text-primary">¡Haz Clic aquí!</a>
+          <a [routerLink]="['/auth/register']" class="small text-primary">¡Haz Clic aquí!</a>
         </div>
       </div>
     </div>
