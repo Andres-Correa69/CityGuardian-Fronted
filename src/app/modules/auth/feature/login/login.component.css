@@ -39,3 +39,21 @@
 h2 {
   font-weight: 700;
 }
+
+.btn-aceptar {
+  background: #5d97ce !important;   /* Color igual al de la imagen */
+  color: #fff !important;
+  font-family: 'Poppins', sans-serif;
+  font-weight: bold;
+  font-size: 1.3rem;
+  border: none;
+  border-radius: 999px !important;  /* Bordes completamente redondeados */
+  padding: 5px 10px !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.btn-aceptar:hover, .btn-aceptar:focus {
+  background: #4e8ac9 !important;
+  color: #fff !important;
+}
