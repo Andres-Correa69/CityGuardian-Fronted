@@ -20,6 +20,10 @@ export const routes: Routes = [
             loadChildren: () => import('./modules/map/feature/map.routes').then(m => m.MAP_ROUTES),
           },
           {
+            path: 'report',
+            loadChildren: () => import('./modules/report/feature/report.routes').then(m => m.REPORT_ROUTES),
+          },
+          {
             path: '**',
             redirectTo: 'dashboard',
           },
