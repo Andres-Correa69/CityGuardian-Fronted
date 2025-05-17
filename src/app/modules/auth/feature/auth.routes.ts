@@ -19,6 +19,10 @@ export const AUTH_ROUTES: Routes = [
         loadComponent: () => import('./reset-password/reset-password.component').then(m => m.ResetPasswordComponent),
     },
     {
+        path:'account-activation',
+        loadComponent: () => import('./account-activation/account-activation.component').then(m => m.AccountActivationComponent),
+    },
+    {
         path:'**',
         redirectTo: 'login',
         
