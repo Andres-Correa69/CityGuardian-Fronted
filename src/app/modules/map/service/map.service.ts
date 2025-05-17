@@ -43,6 +43,25 @@ export class MapService {
   }
  
  
+  public crearMapaEnContenedor(contenedorId: string) {
+    this.mapa = new mapboxgl.Map({
+      accessToken: 'pk.eyJ1IjoiZ2FtZXo5ODE0IiwiYSI6ImNtYXJzdG4wajBhZ3YybW9sdzYyaG5mODQifQ.mRSSFs2sf9keiygC-J-0_Q',
+      container: contenedorId,
+      style: 'mapbox://styles/mapbox/standard',
+      center: this.posicionActual,
+      pitch: 45,
+      zoom: 17
+    });
+    this.mapa.addControl(new mapboxgl.NavigationControl());
+    this.mapa.addControl(
+      new mapboxgl.GeolocateControl({
+        positionOptions: { enableHighAccuracy: true },
+        trackUserLocation: true
+      })
+    );
+  }
+ 
+ 
   public agregarMarcador(): Observable<any> {
     const mapaGlobal = this.mapa;
     const marcadores = this.marcadores;
