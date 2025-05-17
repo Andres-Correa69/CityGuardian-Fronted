@@ -16,6 +16,10 @@ export const routes: Routes = [
             loadComponent: () => import('./modules/dashboard/dashboard.component').then(m => m.DashboardComponent),
           },
           {
+            path: 'map',
+            loadChildren: () => import('./modules/map/feature/map.routes').then(m => m.MAP_ROUTES),
+          },
+          {
             path: '**',
             redirectTo: 'dashboard',
           },
