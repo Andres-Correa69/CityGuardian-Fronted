@@ -16,6 +16,10 @@ export const routes: Routes = [
             loadComponent: () => import('./modules/dashboard/dashboard.component').then(m => m.DashboardComponent),
           },
           {
+            path: 'profile',
+            loadComponent: () => import('./modules/profile/profile.component').then(m => m.ProfileComponent),
+          },
+          {
             path: 'map',
             loadChildren: () => import('./modules/map/feature/map.routes').then(m => m.MAP_ROUTES),
           },
