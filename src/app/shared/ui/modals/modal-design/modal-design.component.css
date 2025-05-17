@@ -25,7 +25,12 @@
   border: none;
   cursor: pointer;
   outline: none;
-  z-index: 2;
+  z-index: 10;
+  color: #000;
+  opacity: 1;
+  padding: 0.5rem;
+  margin: 0;
+  line-height: 1;
 }
 
 #font-text {
@@ -43,7 +48,7 @@
 .modal-title-custom {
   font-family: 'Poppins', sans-serif;
   color: #578FCA;
-  font-size: 2.2rem;
+  font-size: 20px;
   font-weight: bold;
   margin-top: 32px;
   margin-bottom: 18px;
