@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ChatbotComponent } from '../../ui/chatbot/chatbot.component';
 declare var $: any;
 
 @Component({
@@ -9,7 +10,8 @@ declare var $: any;
   imports: [
     CommonModule,
     RouterModule,
-],
+    ChatbotComponent
+  ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'
 })
