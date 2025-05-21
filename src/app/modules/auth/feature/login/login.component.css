@@ -1,59 +1,159 @@
 .login-bg {
   background: #4682b4;
   min-height: 100vh;
-  width: 100vw;
-  position: fixed;
-  top: 0;
-  left: 0;
+  width: 100%;
+  position: relative;
+  padding: 2rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .login-card {
   background: #fff;
   border: 3px solid #b39ddb;
   box-shadow: 0 8px 24px rgba(44, 62, 80, 0.1);
+  transition: all 0.3s ease;
+  margin: 1rem;
 }
 
 .login-card .form-label {
   color: #5c8ecf;
   font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.login-card .form-control {
+  font-size: 0.95rem;
+  padding: 0.6rem 1rem;
 }
 
 .login-card .btn-primary {
   background: #5c8ecf;
   border: none;
   font-weight: 600;
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
 }
 
 .login-card .btn-primary:hover {
   background: #3b6ca8;
+  transform: translateY(-1px);
 }
 
 .login-card a {
   text-decoration: none;
+  transition: all 0.3s ease;
 }
 
 .login-card a:hover {
   text-decoration: underline;
+  color: #3b6ca8 !important;
 }
 
 h2 {
   font-weight: 700;
+  font-size: 1.8rem;
+}
+
+/* Estilos para el contenedor del logo */
+.logo-container {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  aspect-ratio: 1;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.logo-img {
+  width: 100%;
+  height: auto;
+  max-height: 250px;
+  object-fit: contain;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .login-bg {
+    padding: 1rem 0;
+  }
+
+  .login-card {
+    margin: 0.5rem;
+    padding: 1.5rem !important;
+  }
+
+  .logo-container {
+    max-width: 250px;
+    padding: 0.8rem;
+  }
+
+  .logo-img {
+    max-height: 180px;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .login-card .form-control {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .login-bg {
+    padding: 0.5rem 0;
+  }
+
+  .login-card {
+    margin: 0.5rem;
+    padding: 1rem !important;
+  }
+
+  .logo-container {
+    max-width: 180px;
+    padding: 0.5rem;
+  }
+
+  .logo-img {
+    max-height: 120px;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
 }
 
 .btn-aceptar {
-  background: #5d97ce !important;   /* Color igual al de la imagen */
+  background: #5d97ce !important;
   color: #fff !important;
   font-family: 'Poppins', sans-serif;
   font-weight: bold;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   border: none;
-  border-radius: 999px !important;  /* Bordes completamente redondeados */
-  padding: 5px 10px !important;
+  border-radius: 999px !important;
+  padding: 0.5rem 1rem !important;
   box-shadow: none !important;
   outline: none !important;
+  transition: all 0.3s ease;
 }
 
 .btn-aceptar:hover, .btn-aceptar:focus {
   background: #4e8ac9 !important;
   color: #fff !important;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 576px) {
+  .btn-aceptar {
+    font-size: 1rem;
+    padding: 0.4rem 0.8rem !important;
+  }
 }
