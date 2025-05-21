@@ -1,7 +1,6 @@
-import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { ModalDesignService } from 'src/app/shared/ui/modals/modal-design/modal-design.service';
 import { MapService } from 'src/app/modules/map/service/map.service';
 
 @Component({
@@ -14,11 +13,9 @@ import { MapService } from 'src/app/modules/map/service/map.service';
 export class ReportIndexComponent {
   private mapService = inject(MapService);
   private fb = inject(FormBuilder);
-  private modalService = inject(ModalDesignService);
-
-  @ViewChild('createReportTemplate') createReportTemplate!: TemplateRef<any>;
 
   modo: 'tabla' | 'mapa' = 'tabla';
+  sidebarActive = false;
 
   crearReporteForm: FormGroup = this.fb.group({
     titulo: ['', Validators.required],
@@ -38,29 +35,27 @@ export class ReportIndexComponent {
     });
   }
 
-  abrirModalCrearReporte() {
-    setTimeout(() => {
-      this.mapService.mapa = null;
-      this.mapService.crearMapaEnContenedor('modal-mapa');
-      this.mapService.agregarMarcador().subscribe((marcador) => {
-        this.crearReporteForm.get('ubicacion')?.setValue({
-          latitud: marcador.lat,
-          longitud: marcador.lng,
+  toggleSidebar() {
+    this.sidebarActive = !this.sidebarActive;
+    if (this.sidebarActive) {
+      setTimeout(() => {
+        this.mapService.mapa = null;
+        this.mapService.crearMapaEnContenedor('modal-mapa');
+        this.mapService.agregarMarcador().subscribe((marcador) => {
+          this.crearReporteForm.get('ubicacion')?.setValue({
+            latitud: marcador.lat,
+            longitud: marcador.lng,
+          });
         });
-      });
-    }, 100);
-    this.modalService.openModal(this.createReportTemplate, 'md', '!Es hora de reportar!');
-  }
-
-  cerrarModal() {
-    this.modalService.closeModal();
+      }, 100);
+    }
   }
 
   onSubmit() {
     if (this.crearReporteForm.valid) {
       // Aquí iría la lógica para crear el reporte
       console.log(this.crearReporteForm.value);
-      this.cerrarModal();
+      this.toggleSidebar();
     } else {
       this.crearReporteForm.markAllAsTouched();
     }

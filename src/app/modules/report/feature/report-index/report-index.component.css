@@ -1,31 +1,53 @@
 #mapa {
-    width: 100% auto;
+    width: 100%;
     height: 300px;
    }
    
-.modal-create-report {
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 8px 32px rgba(44, 62, 80, 0.15);
-  min-width: 320px;
-  max-width: 420px;
+.main-content {
+  transition: margin-right 0.3s ease;
 }
+
+.create-report-sidebar {
+  position: fixed;
+  top: 0;
+  right: -400px;
+  width: 400px;
+  height: 100vh;
+  background: #fff;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.create-report-sidebar.active {
+  right: 0;
+}
+
+.sidebar-header {
+  border-bottom: 1px solid #e9ecef;
+}
+
 .input-blue {
   border: 2px solid #5c8ecf;
   border-radius: 8px;
   font-size: 1.05rem;
 }
+
 .input-blue:focus {
   border-color: #4682b4;
   box-shadow: 0 0 0 2px #b3c6e6;
 }
+
 .btn-icon {
   color: #4682b4;
   font-size: 1.2rem;
 }
+
 .evidence-upload {
   gap: 10px;
 }
+
 .evidence-box {
   display: flex;
   align-items: center;
@@ -38,9 +60,11 @@
   cursor: pointer;
   transition: border-color 0.2s;
 }
+
 .evidence-box:hover {
   border-color: #5c8ecf;
 }
+
 .btn-cancel {
   background: #bdbdbd;
   color: #fff;
@@ -50,6 +74,7 @@
   border: none;
   padding: 12px 0;
 }
+
 .btn-accept {
   background: #4682b4;
   color: #fff;
@@ -59,9 +84,11 @@
   border: none;
   padding: 12px 0;
 }
+
 .btn-accept:hover {
   background: #356094;
 }
+
 .map-container {
   width: 100%;
   height: 200px;
@@ -69,12 +96,11 @@
   border-radius: 12px;
   overflow: hidden;
 }
-@media (max-width: 500px) {
-  .modal-create-report {
-    min-width: 100vw;
-    max-width: 100vw;
-    border-radius: 0;
-    padding: 1rem;
+
+@media (max-width: 768px) {
+  .create-report-sidebar {
+    width: 100%;
+    right: -100%;
   }
 }
    

@@ -1,64 +1,76 @@
-<div class="container py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <button class="btn btn-outline-primary me-2" [class.active]="modo === 'tabla'" (click)="modo = 'tabla'">Tabla</button>
-      <button class="btn btn-outline-primary" [class.active]="modo === 'mapa'" (click)="modo = 'mapa'">Mapa</button>
-    </div>
-    <button class="btn btn-primary" (click)="abrirModalCrearReporte()">Crear reporte</button>
-  </div>
-
-  <!-- Modo tabla -->
-  <div *ngIf="modo === 'tabla'">
-    <!-- Aquí iría la tabla de reportes (mock o real) -->
-    <div class="alert alert-info">Aquí se listarán los reportes en modo tabla.</div>
-  </div>
-
-  <!-- Modo mapa -->
-  <div *ngIf="modo === 'mapa'">
-    <div class="col-12">
-      <label class="form-label">Ubicación: </label>
-      <div id="mapa"></div>
-    </div>
-  </div>
-
-  <!-- Modal para crear reporte -->
-  <ng-template #createReportTemplate>
-    <form [formGroup]="crearReporteForm" (ngSubmit)="onSubmit()" class="modal-create-report p-3 mx-auto">
-      <h4 class="text-center mb-3 fw-bold">Crea un reporte</h4>
-      <div class="mb-3">
-        <label class="form-label text-primary">Título:</label>
-        <input type="text" class="form-control input-blue" formControlName="titulo" placeholder="Título del reporte">
-      </div>
-      <div class="mb-3 position-relative">
-        <label class="form-label text-primary">Dirección:</label>
-        <input type="text" class="form-control input-blue pe-5" formControlName="direccion" placeholder="Dirección">
-        <button type="button" class="btn btn-link btn-icon position-absolute top-0 end-0 mt-4 me-2 p-0" (click)="obtenerUbicacionActual()" title="Obtener ubicación actual">
-          <i class="bi bi-geo-alt-fill fs-5"></i>
+<div class="container-fluid p-0">
+  <div class="d-flex">
+    <!-- Contenido principal -->
+    <div class="main-content flex-grow-1 p-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <button class="btn btn-outline-primary me-2" [class.active]="modo === 'tabla'" (click)="modo = 'tabla'">Tabla</button>
+          <button class="btn btn-outline-primary" [class.active]="modo === 'mapa'" (click)="modo = 'mapa'">Mapa</button>
+        </div>
+        <button class="btn btn-primary" (click)="toggleSidebar()">
+          <i class="bi bi-plus-lg me-2"></i>Crear reporte
         </button>
       </div>
-      <div class="mb-3">
-        <label class="form-label text-primary">Descripción:</label>
-        <textarea class="form-control input-blue" formControlName="descripcion" rows="3" maxlength="500" placeholder="Describe el incidente..."></textarea>
-        <div class="text-end small text-muted">{{ crearReporteForm.get('descripcion')?.value?.length || 0 }}/500</div>
+
+      <!-- Modo tabla -->
+      <div *ngIf="modo === 'tabla'">
+        <div class="alert alert-info">Aquí se listarán los reportes en modo tabla.</div>
       </div>
-      <div class="mb-3">
-        <label class="form-label text-primary">Adjunta tu evidencia:</label>
-        <div class="evidence-upload d-flex align-items-center gap-2">
-          <label class="evidence-box mb-0">
-            <i class="bi bi-image fs-1 text-secondary"></i>
-            <input type="file" class="d-none" (change)="handleFileInput($event)">
-          </label>
-          <span class="small text-muted">(Opcional, solo imagen)</span>
+
+      <!-- Modo mapa -->
+      <div *ngIf="modo === 'mapa'">
+        <div class="col-12">
+          <label class="form-label">Ubicación: </label>
+          <div id="mapa"></div>
         </div>
       </div>
-      <div class="mb-4">
-        <label class="form-label text-primary">Ubicación en el mapa:</label>
-        <div id="modal-mapa" class="map-container"></div>
+    </div>
+
+    <!-- Sidebar para crear reporte -->
+    <div class="create-report-sidebar" [class.active]="sidebarActive">
+      <div class="sidebar-header d-flex justify-content-between align-items-center p-3">
+        <h4 class="mb-0 fw-bold">Crear reporte</h4>
+        <button class="btn btn-link p-0" (click)="toggleSidebar()">
+          <i class="bi bi-x-lg fs-4"></i>
+        </button>
       </div>
-      <div class="d-flex justify-content-between mt-4 gap-2">
-        <button type="button" class="btn btn-cancel w-50" (click)="cerrarModal()">Cancelar</button>
-        <button type="submit" class="btn btn-accept w-50">Aceptar</button>
-      </div>
-    </form>
-  </ng-template>
+      
+      <form [formGroup]="crearReporteForm" (ngSubmit)="onSubmit()" class="p-3">
+        <div class="mb-3">
+          <label class="form-label text-primary">Título:</label>
+          <input type="text" class="form-control input-blue" formControlName="titulo" placeholder="Título del reporte">
+        </div>
+        <div class="mb-3 position-relative">
+          <label class="form-label text-primary">Dirección:</label>
+          <input type="text" class="form-control input-blue pe-5" formControlName="direccion" placeholder="Dirección">
+          <button type="button" class="btn btn-link btn-icon position-absolute top-0 end-0 mt-4 me-2 p-0" (click)="obtenerUbicacionActual()" title="Obtener ubicación actual">
+            <i class="bi bi-geo-alt-fill fs-5"></i>
+          </button>
+        </div>
+        <div class="mb-3">
+          <label class="form-label text-primary">Descripción:</label>
+          <textarea class="form-control input-blue" formControlName="descripcion" rows="3" maxlength="500" placeholder="Describe el incidente..."></textarea>
+          <div class="text-end small text-muted">{{ crearReporteForm.get('descripcion')?.value?.length || 0 }}/500</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label text-primary">Adjunta tu evidencia:</label>
+          <div class="evidence-upload d-flex align-items-center gap-2">
+            <label class="evidence-box mb-0">
+              <i class="bi bi-image fs-1 text-secondary"></i>
+              <input type="file" class="d-none" (change)="handleFileInput($event)">
+            </label>
+            <span class="small text-muted">(Opcional, solo imagen)</span>
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="form-label text-primary">Ubicación en el mapa:</label>
+          <div id="modal-mapa" class="map-container"></div>
+        </div>
+        <div class="d-flex justify-content-between mt-4 gap-2">
+          <button type="button" class="btn btn-cancel w-50" (click)="toggleSidebar()">Cancelar</button>
+          <button type="submit" class="btn btn-accept w-50">Crear reporte</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
