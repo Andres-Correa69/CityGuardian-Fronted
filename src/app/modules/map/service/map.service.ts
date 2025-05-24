@@ -70,15 +70,21 @@ export class MapService {
 
 
   public pintarMarcadores(reportes: ReporteDTO[]) {
-
     reportes.forEach(reporte => {
-      new mapboxgl.Marker({ color: 'red' })
+      const marker = new mapboxgl.Marker({ color: 'red' })
         .setLngLat([reporte.ubicacion.longitud, reporte.ubicacion.latitud])
-        .setPopup(new mapboxgl.Popup().setHTML(reporte.titulo))
-        .addTo(this.mapa);
+        .setPopup(new mapboxgl.Popup().setHTML(reporte.titulo));
+
+      // Agregar el evento de clic al marcador
+      marker.getElement().addEventListener('click', () => {
+        console.log('Marcador clickeado:', reporte.id);
+        // Disparar un evento personalizado con el ID del reporte
+        const event = new CustomEvent('markerClick', { detail: { reportId: reporte.id } });
+        window.dispatchEvent(event);
+      });
+
+      marker.addTo(this.mapa);
     });
-
-
   }
 
   public crearMapaPersonalizado(containerId: string, center: [number, number]) {
