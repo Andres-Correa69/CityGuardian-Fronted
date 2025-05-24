@@ -5,9 +5,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.7);
   z-index: 9999;
 }
 
@@ -18,6 +16,103 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.escudo-container {
+  width: 120px;
+  height: 120px;
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.escudo {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: #2e7d32;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.escudo::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  background: #1b5e20;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.escudo::after {
+  content: '';
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  width: 50%;
+  height: 50%;
+  background: #4caf50;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.loading-text {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1.2rem;
+  color: #ffffff;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.loading-text::after {
+  content: '...';
+  animation: loadingDots 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes loadingDots {
+  0%, 20% {
+    content: '.';
+  }
+  40% {
+    content: '..';
+  }
+  60%, 100% {
+    content: '...';
+  }
+}
+
+@media (max-width: 768px) {
+  .escudo-container {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .loading-text {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .escudo-container {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .loading-text {
+    font-size: 1rem;
+  }
 }
 
 .truck-container {
@@ -77,22 +172,6 @@
   pointer-events: none;
 }
 
-.loading-text {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 1.2rem;
-  color: #ffffff;
-  font-weight: 500;
-  letter-spacing: 1px;
-  margin-top: 1rem;
-  animation: textColorPulse 1s ease-in-out infinite;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.loading-text::after {
-  content: '...';
-  animation: loadingDots 0.8s infinite;
-}
-
 .progress-container {
   width: 300px;
   height: 4px;
@@ -138,27 +217,6 @@
   }
 }
 
-@keyframes textColorPulse {
-  0%, 100% {
-    color: #ffffff;
-  }
-  50% {
-    color: #e0e0e0;
-  }
-}
-
-@keyframes loadingDots {
-  0%, 20% {
-    content: '.';
-  }
-  40% {
-    content: '..';
-  }
-  60%, 100% {
-    content: '...';
-  }
-}
-
 @keyframes progressMove {
   0% {
     left: 100%;
@@ -180,58 +238,6 @@
   }
   100% {
     transform: translateX(-100%);
-  }
-}
-
-@media (max-width: 768px) {
-  .truck-container {
-    width: 260px;
-    height: 200px;
-  }
-
-  .truck-icon {
-    width: 200px;
-    height: 160px;
-  }
-
-  .loading-text {
-    font-size: 1.1rem;
-  }
-
-  .progress-container {
-    width: 260px;
-  }
-
-  .campana-animada {
-    width: 70px;
-    max-width: 30vw;
-  }
-  .campana-animada-container {
-    min-height: 80px;
-  }
-}
-
-@media (max-width: 480px) {
-  .truck-container {
-    width: 220px;
-    height: 180px;
-  }
-
-  .truck-icon {
-    width: 180px;
-    height: 140px;
-  }
-
-  .progress-container {
-    width: 220px;
-  }
-
-  .campana-animada {
-    width: 50px;
-    max-width: 40vw;
-  }
-  .campana-animada-container {
-    min-height: 60px;
   }
 }
 
