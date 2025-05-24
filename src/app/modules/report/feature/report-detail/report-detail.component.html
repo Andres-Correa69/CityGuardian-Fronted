@@ -45,6 +45,48 @@
                 <p>{{ report.description }}</p>
             </div>
 
+            <!-- Historial de estados del reporte -->
+            <div class="mb-4">
+                <h5>Estado</h5>
+                <div class="card p-3" style="background: #f8fafc; border-radius: 12px;">
+                    <div *ngFor="let state of report.stateHistory; let last = last" class="d-flex align-items-start mb-3 position-relative" [ngStyle]="{'padding-bottom': !last ? '18px' : '0'}">
+                        <!-- Línea vertical para conectar los estados -->
+                        <div style="width: 24px; display: flex; flex-direction: column; align-items: center; position: relative;">
+                            <ng-container [ngSwitch]="state.status">
+                                <span *ngSwitchCase="'Creado'">
+                                    <i class="bi bi-circle" style="color: #b0b0b0; font-size: 1.5rem;"></i>
+                                </span>
+                                <span *ngSwitchCase="'Verificado'">
+                                    <i class="bi bi-check-circle" style="color: #7cff6b; font-size: 1.5rem;"></i>
+                                </span>
+                                <span *ngSwitchCase="'Resuelto'">
+                                    <i class="bi bi-check-circle-fill" style="color: #00c853; font-size: 1.5rem;"></i>
+                                </span>
+                                <span *ngSwitchCase="'REJECTED'">
+                                    <i class="bi bi-x-circle-fill" style="color: #ff5252; font-size: 1.5rem;"></i>
+                                </span>
+                                <span *ngSwitchDefault>
+                                    <i class="bi bi-dot" style="font-size: 1.5rem;"></i>
+                                </span>
+                            </ng-container>
+                            <!-- Línea vertical solo si no es el último -->
+                            <div *ngIf="!last" style="width: 2px; height: 32px; background: #d1d5db; margin-top: 2px;"></div>
+                        </div>
+                        <div class="ms-3 flex-grow-1">
+                            <div class="fw-semibold" style="font-size: 1.08rem;">
+                                {{ state.status }}
+                            </div>
+                            <div class="text-muted" style="font-size: 0.97rem;">
+                                {{ state.date | date:'d \'de\' MMMM \'del\' y hh:mm a' }}
+                            </div>
+                            <div *ngIf="state.status === 'REJECTED' && state.reason" class="mt-1">
+                                <span class="fw-bold">motivo:</span> <span class="fst-italic">{{ state.reason }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Sección del mapa - solo si hay ubicación -->
             <div *ngIf="report.location && report.location.latitude && report.location.longitude">
                 <h5>Ubicación en el mapa</h5>

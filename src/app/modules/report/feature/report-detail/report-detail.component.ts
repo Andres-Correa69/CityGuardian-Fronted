@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReportService, Report } from '../../service/report.service';
 import { LoaderService } from 'src/app/shared/ui/loading/loader/loader.service';
 import { MapService } from 'src/app/modules/map/service/map.service';
-
+import { IReportResponse } from '../../dto/reportResponse.interface';
 @Component({
   selector: 'app-report-detail',
   standalone: true,
@@ -19,7 +19,7 @@ export class ReportDetailComponent implements OnInit, AfterViewInit {
   private loaderService = inject(LoaderService);
   private mapService = inject(MapService);
 
-  report: Report | null = null;
+  report: IReportResponse | null = null;
 
   ngOnInit(): void {
     this.loadReport();

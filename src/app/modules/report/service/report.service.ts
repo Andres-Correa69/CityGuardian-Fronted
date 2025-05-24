@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { ApiService } from 'src/app/core/service/api.service';
 import { environments } from 'src/environments/environments';
 import { Category } from '../../category/service/category.service';
+import { IReportResponse } from '../dto/reportResponse.interface';
 
 export interface Report {
   id: string;
@@ -62,11 +63,11 @@ export class ReportService {
     return this.apiService.get<Report[]>(this.endpoint, { headers });
   }
 
-  getReportById(id: string): Observable<Report> {
+  getReportById(id: string): Observable<IReportResponse> {
     const token = localStorage.getItem('AuthToken');
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    return this.apiService.get<Report>(`${this.endpoint}/${id}`, { headers });
+    return this.apiService.get<IReportResponse>(`${this.endpoint}/${id}`, { headers });
   }
 }
