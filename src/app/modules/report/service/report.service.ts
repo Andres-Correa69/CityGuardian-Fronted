@@ -31,23 +31,24 @@ export class ReportService {
 
   createReport(report: Report, images: File[]): Observable<any> {
     const token = localStorage.getItem('AuthToken');
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
     const formData = new FormData();
-    formData.append('report', JSON.stringify(report));
+
+    // Convertimos el report a Blob para asegurar el tipo correcto
+    const reportBlob = new Blob([JSON.stringify(report)], { type: 'application/json' });
+    formData.append('report', reportBlob, 'report.json');
 
     if (images && images.length > 0) {
-      images.forEach(image => {
-        formData.append('imagenes', image);
+      images.forEach((image, index) => {
+        // Aseguramos que el archivo mantenga su tipo MIME original
+        formData.append('imagenes', image, image.name);
       });
     }
 
+    // No establecemos ningún Content-Type, dejamos que el navegador lo maneje
     return this.apiService.post<any>(`${this.endpoint}/create`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
+      headers: new HttpHeaders({
         'Authorization': `Bearer ${token}`
-      }
+      })
     });
   }
 

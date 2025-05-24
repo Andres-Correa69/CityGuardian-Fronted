@@ -36,23 +36,24 @@ export class ApiService {
   }
 
   post<T>(endpoint: string, body: any, options: any = {}) {
-    return this.http.post<T>(`${this.baseUrl}${endpoint}`, body, options)
-      .pipe(
-        map(response => response as T),
-        catchError(this.handleError)
-      );
-  }
+    // Si es FormData, no establecemos Content-Type
+    if (body instanceof FormData) {
+      return this.http.post<T>(`${this.baseUrl}${endpoint}`, body, options)
+        .pipe(
+          map(response => response as T),
+          catchError(this.handleError)
+        );
+    }
 
-  put<T>(endpoint: string, body: any) {
-    return this.http.put<T>(`${this.baseUrl}${endpoint}`, body)
-      .pipe(
-        map(response => response as T),
-        catchError(this.handleError)
-      );
-  }
+    // Para otros tipos de datos, establecemos el Content-Type por defecto
+    const defaultOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        ...options.headers
+      })
+    };
 
-  delete<T>(endpoint: string) {
-    return this.http.delete<T>(`${this.baseUrl}${endpoint}`)
+    return this.http.post<T>(`${this.baseUrl}${endpoint}`, body, defaultOptions)
       .pipe(
         map(response => response as T),
         catchError(this.handleError)
