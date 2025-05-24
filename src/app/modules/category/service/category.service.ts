@@ -11,7 +11,7 @@ export interface Category {
   providedIn: 'root'
 })
 export class CategoryService {
-  private readonly endpoint = '/categories';
+  private readonly endpoint = 'categories';
   private apiService = inject(ApiService);
 
   getCategories(): Observable<Category[]> {
