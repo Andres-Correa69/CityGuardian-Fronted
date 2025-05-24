@@ -5,6 +5,7 @@ import { ApiService } from 'src/app/core/service/api.service';
 import { ILoginResponse } from '../dto/loginResponse.interface';
 import { ILoginRequest } from '../dto/LoginRequest.interface';
 import { IRegisterRequest } from '../dto/registerRequest.interface';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +48,14 @@ export class AuthService {
 
   getUserByUsername(username: string) {
     return this.apiService.get(`${this.prefix}/usuarios/username/${username}`);
+  }
+
+  sendActivationCode(token: string) {
+    return this.apiService.post(`users/sendCode`, {}, { headers: new HttpHeaders({ 'Authorization': 'Bearer ' + token }) });
+  }
+
+  validateActivationCode(token: string, code: string) {
+    return this.apiService.post(`users/verifyCode`, { code }, { headers: new HttpHeaders({ 'Authorization': 'Bearer ' + token }) });
   }
 
   clearSession() {
