@@ -1,46 +1,45 @@
 <div class="profile-bg">
-  <!-- Encabezado con fondo -->
+  <!-- Encabezado con fondo fijo -->
   <div class="profile-header position-relative">
     <img src="/assets/profile/font-profile.png" alt="Fondo de perfil" class="header-img">
-    <button class="btn btn-light btn-edit-bg position-absolute top-0 end-0 m-3">Editar Fondo</button>
   </div>
 
-  <!-- Tarjeta de usuario -->
-  <div class="profile-card d-flex align-items-center px-4 py-3">
-    <img src="/assets/profile/user-avatar.jpg" alt="Foto de perfil" class="profile-avatar me-3">
+  <!-- Tarjeta de usuario simplificada -->
+  <div class="profile-card d-flex align-items-center px-4 mt-0">
     <div class="flex-grow-1">
-      <div class="fw-bold text-white fs-5">User</div>
-      <div class="text-white-50">Agent</div>
+      <div class="fw-bold text-white fs-5">{{ profile?.name }} {{ profile?.lastName }}</div>
+      <div class="text-white-50">{{ profile?.email }}</div>
     </div>
     <button class="btn btn-primary ms-auto">Editar Perfil</button>
   </div>
 
-  <!-- Formulario de datos -->
-  <form class="profile-form mt-5" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+  <!-- Información del usuario (no editable) -->
+  <div class="profile-info mt-5">
     <div class="row mb-4">
       <div class="col-md-6 mb-3 mb-md-0">
-        <label class="form-label fw-semibold text-primary">Nombre:</label>
-        <input type="text" class="form-control profile-input" formControlName="nombre">
+        <div class="info-label">Nombre</div>
+        <div class="info-value">{{ profile?.name }}</div>
       </div>
       <div class="col-md-6">
-        <label class="form-label fw-semibold text-primary">Apellido:</label>
-        <input type="text" class="form-control profile-input" formControlName="apellido">
+        <div class="info-label">Apellido</div>
+        <div class="info-value">{{ profile?.lastName }}</div>
       </div>
     </div>
-    <div class="row mb-5">
+    <div class="row mb-4">
       <div class="col-md-6 mb-3 mb-md-0">
-        <label class="form-label fw-semibold text-primary">Teléfono:</label>
-        <input type="text" class="form-control profile-input" formControlName="telefono">
+        <div class="info-label">Teléfono</div>
+        <div class="info-value">{{ profile?.phone }}</div>
       </div>
       <div class="col-md-6">
-        <label class="form-label fw-semibold text-primary">Dirección:</label>
-        <input type="text" class="form-control profile-input" formControlName="direccion">
+        <div class="info-label">Dirección</div>
+        <div class="info-value">{{ profile?.address }}</div>
       </div>
     </div>
-    <div class="d-flex justify-content-center gap-4">
-      <button type="button" class="btn btn-profile">Cambiar contraseña</button>
-      <button type="button" class="btn btn-danger">Eliminar la cuenta</button>
-      <button type="button" class="btn btn-profile">Cambiar la Foto de perfil</button>
-    </div>
-  </form>
+  </div>
+
+  <!-- Botones de acción -->
+  <div class="d-flex justify-content-center gap-4 mt-5">
+    <button type="button" class="btn btn-outline-primary">Recuperar contraseña</button>
+    <button type="button" class="btn btn-danger">Eliminar cuenta</button>
+  </div>
 </div>
