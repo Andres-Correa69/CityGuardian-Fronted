@@ -21,6 +21,7 @@ export class IndexCategoryComponent implements OnInit {
   
   categories: Category[] = [];
   newCategory: Category = {
+    id: '',
     name: '',
     description: ''
   };
@@ -66,6 +67,7 @@ export class IndexCategoryComponent implements OnInit {
 
   private resetForm(): void {
     this.newCategory = {
+      id: '',
       name: '',
       description: ''
     };

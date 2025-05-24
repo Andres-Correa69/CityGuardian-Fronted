@@ -10,14 +10,14 @@ export class ApiService {
   private http = inject(HttpClient);
   private readonly baseUrl: string = environments.API_URL;
 
-  constructor() {}
+  constructor() { }
 
   private handleError(error: HttpErrorResponse) {
     // Preservamos la estructura del error del servidor
     if (error.error && typeof error.error === 'object') {
       return throwError(() => error.error);
     }
-    
+
     // Si no hay estructura específica, creamos un mensaje de error
     const errorMessage = error.error?.message || error.message || 'Error en la petición';
     return throwError(() => ({
@@ -27,8 +27,8 @@ export class ApiService {
     }));
   }
 
-  get<T>(endpoint: string, params?: any) {
-    return this.http.get<T>(`${this.baseUrl}${endpoint}`, { params })
+  get<T>(endpoint: string, options: { params?: any, headers?: HttpHeaders } = {}) {
+    return this.http.get<T>(`${this.baseUrl}${endpoint}`, options)
       .pipe(
         map(response => response as T),
         catchError(this.handleError)

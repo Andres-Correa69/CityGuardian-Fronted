@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { ApiService } from 'src/app/core/service/api.service';
 
 export interface Category {
+  id: string;
   name: string;
   description: string;
 }

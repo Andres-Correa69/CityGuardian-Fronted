@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalDesignService } from 'src/app/shared/ui/modals/modal-design/modal-design.service';
 import { LoaderService } from 'src/app/shared/ui/loading/loader/loader.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Category } from 'src/app/modules/category/service/category.service';
 
 @Component({
   selector: 'app-report-index',
@@ -20,11 +21,12 @@ export class ReportIndexComponent implements OnInit {
   private modalService = inject(ModalDesignService);
   private loaderService = inject(LoaderService);
   private ngbModal = inject(NgbModal);
-  
+
   @ViewChild('createReportTemplate') createReportTemplate!: TemplateRef<any>;
-  
+
   reports: Report[] = [];
   selectedImages: File[] = [];
+  categories: Category[] = [];
   newReport: Report = {
     title: '',
     description: '',
@@ -38,7 +40,16 @@ export class ReportIndexComponent implements OnInit {
   };
 
   ngOnInit(): void {
+    this.loadCategories();
     this.loadReports();
+  }
+
+  loadCategories(): void {
+    this.reportService.getCategories().subscribe({
+      next: (data) => {
+        this.categories = data;
+      }
+    });
   }
 
   loadReports(): void {
@@ -57,15 +68,17 @@ export class ReportIndexComponent implements OnInit {
 
   openCreateReportModal(): void {
     const modalRef = this.modalService.openModal(this.createReportTemplate, 'lg', 'Crear Nuevo Reporte');
-    
+
     // Esperamos a que el modal esté completamente abierto
     modalRef.shown.subscribe(() => {
       // Inicializamos el mapa después de que el modal esté visible
       setTimeout(() => {
         this.mapService.crearMapa();
         this.mapService.agregarMarcador().subscribe((marcador) => {
-          this.newReport.location.latitude = marcador.lat.toString();
-          this.newReport.location.longitude = marcador.lng.toString();
+          this.newReport.location = {
+            latitude: marcador.lat.toString(),
+            longitude: marcador.lng.toString()
+          }
         });
       }, 100);
     });

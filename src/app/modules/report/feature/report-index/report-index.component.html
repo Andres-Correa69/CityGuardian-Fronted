@@ -22,7 +22,7 @@
             <td>{{ report.title }}</td>
             <td>{{ report.description }}</td>
             <td>{{ report.status }}</td>
-            <td>{{ report.location.latitude }}, {{ report.location.longitude }}</td>
+            <td>{{ report.location?.latitude }}, {{ report.location?.longitude }}</td>
           </tr>
         </tbody>
       </table>
@@ -42,10 +42,10 @@
         <textarea class="form-control" [(ngModel)]="newReport.description" name="description" required></textarea>
       </div>
 
-      <div class="mb-3">
-        <label class="form-label">Categoría ID:</label>
-        <input type="text" class="form-control" [(ngModel)]="newReport.categoryId" name="categoryId" required>
-      </div>
+      <select class="form-select mb-3" [(ngModel)]="newReport.categoryId" name="categoryId" required>
+        <option value="">Selecciona una categoría</option>
+        <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+      </select>
 
       <div class="mb-3">
         <label class="form-label">Imágenes:</label>
