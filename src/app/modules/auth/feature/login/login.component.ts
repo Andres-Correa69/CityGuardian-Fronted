@@ -5,7 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { LoaderComponent } from 'src/app/shared/ui/loading/loader/loader.component';
 import { LoaderService } from 'src/app/shared/ui/loading/loader/loader.service';
 import { ModalDesignService } from 'src/app/shared/ui/modals/modal-design/modal-design.service';
-import { ServicesService } from '../../service/services.service';
+import { AuthService } from '../../service/auth.service';
 import { ILoginResponse } from '../../dto/loginResponse.interface';
 import { ILoginRequest } from '../../dto/LoginRequest.interface';
 import { TokenService } from '@core/service/token.service';
@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
   private fb = inject(FormBuilder);
   private modalService = inject(ModalDesignService);
   private loaderService = inject(LoaderService);
-  private serviceAuth = inject(ServicesService);
+  private authService = inject(AuthService);
   private tokenService = inject(TokenService);
   private roleService = inject(RoleService);
 
@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
       const loginRequest: ILoginRequest = this.loginForm.value;
       this.loaderService.showLoading();
       
-      this.serviceAuth.login(loginRequest).subscribe({
+      this.authService.login(loginRequest).subscribe({
         next: (res: ILoginResponse) => {
           this.loaderService.hideLoading();
           this.tokenService.setToken(res.token);

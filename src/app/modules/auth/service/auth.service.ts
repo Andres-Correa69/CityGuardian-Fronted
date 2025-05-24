@@ -4,11 +4,12 @@ import { catchError } from 'rxjs/operators';
 import { ApiService } from 'src/app/core/service/api.service';
 import { ILoginResponse } from '../dto/loginResponse.interface';
 import { ILoginRequest } from '../dto/LoginRequest.interface';
+import { IRegisterRequest } from '../dto/registerRequest.interface';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ServicesService {
+export class AuthService {
 
   private apiService = inject(ApiService);
   private readonly prefix = 'auth';
@@ -16,6 +17,17 @@ export class ServicesService {
 
   login(loginRequest: ILoginRequest) : Observable<ILoginResponse>  {
     return this.apiService.post<ILoginResponse>(`${this.prefix}/login`, loginRequest).pipe(
+      catchError(error => {
+        if (error.error || error.message) {
+          return throwError(() => error.message);
+        }
+        return throwError(() => ({ error: true, message: 'Error al conectar con el servidor' }));
+      })
+    );
+  }
+
+  register(registerRequest: IRegisterRequest): Observable<any> {
+    return this.apiService.post<any>(`${this.prefix}/signup`, registerRequest).pipe(
       catchError(error => {
         if (error.error || error.message) {
           return throwError(() => error.message);
@@ -35,5 +47,10 @@ export class ServicesService {
 
   getUserByUsername(username: string) {
     return this.apiService.get(`${this.prefix}/usuarios/username/${username}`);
+  }
+
+  clearSession() {
+    localStorage.removeItem('AuthToken');
+    localStorage.removeItem('userRole');
   }
 }

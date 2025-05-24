@@ -2,29 +2,88 @@
   <div class="container d-flex justify-content-center align-items-center min-vh-100">
     <div class="login-card p-3 p-md-4 rounded-4 shadow-lg" style="max-width: 700px; width: 95%;">
       <h2 class="fw-bold mb-4 text-center text-primary">Registro de Usuario</h2>
+      
+      <!-- Mensaje de error -->
+      <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+        {{ errorMessage }}
+      </div>
+
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <!-- Nombre y Apellido -->
         <div class="row mb-3">
           <div class="col-md-6 mb-3 mb-md-0">
-            <label for="nombre" class="form-label fw-semibold">Nombre:</label>
-            <input type="text" class="form-control" id="nombre" formControlName="nombre" placeholder="Nombre">
+            <label for="name" class="form-label fw-semibold">Nombre:</label>
+            <input type="text" class="form-control" id="name" formControlName="name" placeholder="Nombre">
+            <div *ngIf="name?.invalid && (name?.dirty || name?.touched)" class="text-danger">
+              <small *ngIf="name?.errors?.['required']">El nombre es requerido</small>
+              <small *ngIf="name?.errors?.['minlength']">El nombre debe tener al menos 2 caracteres</small>
+            </div>
           </div>
           <div class="col-md-6">
-            <label for="apellido" class="form-label fw-semibold">Apellido:</label>
-            <input type="text" class="form-control" id="apellido" formControlName="apellido" placeholder="Apellido">
+            <label for="lastName" class="form-label fw-semibold">Apellido:</label>
+            <input type="text" class="form-control" id="lastName" formControlName="lastName" placeholder="Apellido">
+            <div *ngIf="lastName?.invalid && (lastName?.dirty || lastName?.touched)" class="text-danger">
+              <small *ngIf="lastName?.errors?.['required']">El apellido es requerido</small>
+              <small *ngIf="lastName?.errors?.['minlength']">El apellido debe tener al menos 2 caracteres</small>
+            </div>
           </div>
         </div>
-        <div class="row mb-4">
+
+        <!-- Teléfono y Ciudad -->
+        <div class="row mb-3">
           <div class="col-md-6 mb-3 mb-md-0">
-            <label for="telefono" class="form-label fw-semibold">Teléfono:</label>
-            <input type="text" class="form-control" id="telefono" formControlName="telefono" placeholder="Teléfono">
+            <label for="phone" class="form-label fw-semibold">Teléfono:</label>
+            <input type="tel" class="form-control" id="phone" formControlName="phone" placeholder="Teléfono">
+            <div *ngIf="phone?.invalid && (phone?.dirty || phone?.touched)" class="text-danger">
+              <small *ngIf="phone?.errors?.['required']">El teléfono es requerido</small>
+              <small *ngIf="phone?.errors?.['pattern']">Debe ser un número de 10 dígitos</small>
+            </div>
           </div>
           <div class="col-md-6">
-            <label for="direccion" class="form-label fw-semibold">Dirección:</label>
-            <input type="text" class="form-control" id="direccion" formControlName="direccion" placeholder="Dirección">
+            <label for="city" class="form-label fw-semibold">Ciudad:</label>
+            <input type="text" class="form-control" id="city" formControlName="city" placeholder="Ciudad">
+            <div *ngIf="city?.invalid && (city?.dirty || city?.touched)" class="text-danger">
+              <small *ngIf="city?.errors?.['required']">La ciudad es requerida</small>
+              <small *ngIf="city?.errors?.['minlength']">La ciudad debe tener al menos 2 caracteres</small>
+            </div>
           </div>
         </div>
+
+        <!-- Dirección -->
+        <div class="mb-3">
+          <label for="address" class="form-label fw-semibold">Dirección:</label>
+          <input type="text" class="form-control" id="address" formControlName="address" placeholder="Dirección">
+          <div *ngIf="address?.invalid && (address?.dirty || address?.touched)" class="text-danger">
+            <small *ngIf="address?.errors?.['required']">La dirección es requerida</small>
+            <small *ngIf="address?.errors?.['minlength']">La dirección debe tener al menos 5 caracteres</small>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+          <label for="email" class="form-label fw-semibold">Correo Electrónico:</label>
+          <input type="email" class="form-control" id="email" formControlName="email" placeholder="correo@ejemplo.com">
+          <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="text-danger">
+            <small *ngIf="email?.errors?.['required']">El correo es requerido</small>
+            <small *ngIf="email?.errors?.['email']">Ingrese un correo válido</small>
+          </div>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="mb-4">
+          <label for="password" class="form-label fw-semibold">Contraseña:</label>
+          <input type="password" class="form-control" id="password" formControlName="password" placeholder="Contraseña">
+          <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="text-danger">
+            <small *ngIf="password?.errors?.['required']">La contraseña es requerida</small>
+            <small *ngIf="password?.errors?.['minlength']">La contraseña debe tener al menos 8 caracteres</small>
+          </div>
+        </div>
+
+        <!-- Botones -->
         <div class="d-flex justify-content-center gap-4">
-          <button type="submit" class="btn btn-primary px-4" style="background: #5c8ecf; border: none;">Registrarme</button>
+          <button type="submit" class="btn btn-primary px-4" [disabled]="registerForm.invalid" style="background: #5c8ecf; border: none;">
+            Registrarme
+          </button>
           <button type="button" class="btn btn-secondary px-4" (click)="onCancel()">Cancelar</button>
         </div>
       </form>

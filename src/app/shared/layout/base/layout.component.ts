@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ChatbotComponent } from '../../ui/chatbot/chatbot.component';
+import { AuthService } from 'src/app/modules/auth/service/auth.service';
+
 declare var $: any;
 
 @Component({
@@ -17,9 +19,16 @@ declare var $: any;
 })
 export class LayoutComponent implements OnInit{
   isSidebarCollapsed = false;
-
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  
   ngOnInit() {
     this.initializeSidebar();
+  }
+
+  logout() {
+    this.authService.clearSession();
+    this.router.navigate(['/login']);
   }
 
   initializeSidebar() {
