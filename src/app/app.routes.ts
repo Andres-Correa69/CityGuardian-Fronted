@@ -28,6 +28,10 @@ export const routes: Routes = [
             loadChildren: () => import('./modules/report/feature/report.routes').then(m => m.REPORT_ROUTES),
           },
           {
+            path: 'category',
+            loadChildren: () => import('./modules/category/feature/category.routes').then(m => m.CATEGORY_ROUTES),
+          },
+          {
             path: '**',
             redirectTo: 'dashboard',
           },
