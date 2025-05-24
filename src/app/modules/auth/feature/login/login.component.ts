@@ -25,12 +25,19 @@ export class LoginComponent implements OnInit {
   private loaderService = inject(LoaderService);
   private serviceAuth = inject(ServicesService);
   private tokenService = inject(TokenService);
-  loginForm!: FormGroup;
+  loginForm: FormGroup;
 
   @ViewChild('twoFactorTemplate') twoFactorTemplate!: TemplateRef<any>;
 
+  constructor() {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]]
+    });
+  }
+
   ngOnInit(): void {
-    this.initForm();
+    // this.initForm();
   }
 
   initForm(){
