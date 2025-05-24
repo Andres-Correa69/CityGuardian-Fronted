@@ -59,4 +59,17 @@ export class ApiService {
         catchError(this.handleError)
       );
   }
+
+  patch<T>(endpoint: string, body: any, options: any = {}) {
+    const requestOptions = {
+      ...options,
+      headers: options.headers || new HttpHeaders()
+    };
+
+    return this.http.patch<T>(`${this.baseUrl}${endpoint}`, body, requestOptions)
+      .pipe(
+        map(response => response as T),
+        catchError(this.handleError)
+      );
+  }
 }

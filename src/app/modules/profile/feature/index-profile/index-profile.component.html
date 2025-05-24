@@ -5,12 +5,12 @@
   </div>
 
   <!-- Tarjeta de usuario simplificada -->
-  <div class="profile-card d-flex align-items-center px-4 mt-0">
+  <div class="profile-card d-flex align-items-center px-4 py-3">
     <div class="flex-grow-1">
       <div class="fw-bold text-white fs-5">{{ profile?.name }} {{ profile?.lastName }}</div>
       <div class="text-white-50">{{ profile?.email }}</div>
     </div>
-    <button class="btn btn-primary ms-auto">Editar Perfil</button>
+    <button class="btn btn-primary ms-auto" (click)="openEditProfileModal()">Editar Perfil</button>
   </div>
 
   <!-- Información del usuario (no editable) -->
@@ -31,6 +31,12 @@
         <div class="info-value">{{ profile?.phone }}</div>
       </div>
       <div class="col-md-6">
+        <div class="info-label">Ciudad</div>
+        <div class="info-value">{{ profile?.city }}</div>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-12">
         <div class="info-label">Dirección</div>
         <div class="info-value">{{ profile?.address }}</div>
       </div>
@@ -43,3 +49,58 @@
     <button type="button" class="btn btn-danger">Eliminar cuenta</button>
   </div>
 </div>
+
+<!-- Modal de edición de perfil -->
+<ng-template #editProfileTemplate>
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label class="form-label">Nombre:</label>
+      <input type="text" class="form-control" formControlName="name">
+      <div class="text-danger"
+        *ngIf="profileForm.get('name')?.touched && profileForm.get('name')?.errors?.['required']">
+        El nombre es requerido
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Apellido:</label>
+      <input type="text" class="form-control" formControlName="lastName">
+      <div class="text-danger"
+        *ngIf="profileForm.get('lastName')?.touched && profileForm.get('lastName')?.errors?.['required']">
+        El apellido es requerido
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Teléfono:</label>
+      <input type="text" class="form-control" formControlName="phone">
+      <div class="text-danger"
+        *ngIf="profileForm.get('phone')?.touched && profileForm.get('phone')?.errors?.['required']">
+        El teléfono es requerido
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Ciudad:</label>
+      <input type="text" class="form-control" formControlName="city">
+      <div class="text-danger"
+        *ngIf="profileForm.get('city')?.touched && profileForm.get('city')?.errors?.['required']">
+        La ciudad es requerida
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Dirección:</label>
+      <input type="text" class="form-control" formControlName="address">
+      <div class="text-danger"
+        *ngIf="profileForm.get('address')?.touched && profileForm.get('address')?.errors?.['required']">
+        La dirección es requerida
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2">
+      <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="profileForm.invalid">Guardar cambios</button>
+    </div>
+  </form>
+</ng-template>
