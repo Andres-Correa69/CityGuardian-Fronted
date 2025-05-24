@@ -105,6 +105,10 @@ export class ReportIndexComponent implements OnInit {
     });
   }
 
+  verDetalle(report: Report) {
+    console.log(report);
+  }
+
   private resetForm(): void {
     this.newReport = {
       title: '',

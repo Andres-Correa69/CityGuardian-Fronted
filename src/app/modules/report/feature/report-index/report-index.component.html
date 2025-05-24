@@ -21,6 +21,11 @@
           <tr *ngFor="let report of reports">
             <td>{{ report.title }}</td>
             <td>{{ report.description }}</td>
+            <td>
+              <a (click)="verDetalle(report)" class="text-primary text-decoration-underline" style="cursor: pointer;">
+                Ver detalle
+              </a>
+            </td>
             <td>{{ report.status }}</td>
             <td>{{ report.location?.latitude }} {{report.location == null || report.location.latitude == '' ? '' : ','
               }} {{ report.location?.longitude }}
