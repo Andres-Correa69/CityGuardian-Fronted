@@ -72,4 +72,12 @@ export class ApiService {
         catchError(this.handleError)
       );
   }
+
+  delete<T>(endpoint: string, options: any = {}) {
+    return this.http.delete<T>(`${this.baseUrl}${endpoint}`, options)
+      .pipe(
+        map(response => response as T),
+        catchError(this.handleError)
+      );
+  }
 }

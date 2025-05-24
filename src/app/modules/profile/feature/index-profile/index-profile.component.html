@@ -45,8 +45,8 @@
 
   <!-- Botones de acción -->
   <div class="d-flex justify-content-center gap-4 mt-5">
-    <button type="button" class="btn btn-outline-primary">Recuperar contraseña</button>
-    <button type="button" class="btn btn-danger">Eliminar cuenta</button>
+    <button type="button" class="btn btn-outline-primary" (click)="recoverPassword()">Recuperar contraseña</button>
+    <button type="button" class="btn btn-danger" (click)="deleteAccount()">Eliminar cuenta</button>
   </div>
 </div>
 
@@ -103,4 +103,109 @@
       <button type="submit" class="btn btn-primary" [disabled]="profileForm.invalid">Guardar cambios</button>
     </div>
   </form>
+</ng-template>
+
+<ng-template #newPasswordTemplate>
+  <div class="container p-4">
+    <div class="text-center mb-4">
+      <h5>Cambio de contraseña</h5>
+      <p class="text-muted">Ingresa tu nueva contraseña</p>
+    </div>
+    <form [formGroup]="newPasswordForm" (ngSubmit)="onNewPasswordSubmit()">
+      <div class="mb-3">
+        <label for="newPassword" class="form-label fw-semibold">Nueva contraseña</label>
+        <div class="input-group">
+          <input [type]="showPassword ? 'text' : 'password'" class="form-control" id="newPassword"
+            formControlName="newPassword" placeholder="Ingresa tu nueva contraseña">
+          <span class="input-group-text" (click)="togglePasswordVisibility()">
+            <i class="bi" [class.bi-eye]="!showPassword" [class.bi-eye-slash]="showPassword"></i>
+          </span>
+        </div>
+        <div *ngIf="newPasswordForm?.get('newPassword')?.invalid && newPasswordForm?.get('newPassword')?.touched"
+          class="text-danger small">
+          <span *ngIf="newPasswordForm?.get('newPassword')?.errors?.['required']">La contraseña es obligatoria</span>
+          <span *ngIf="newPasswordForm?.get('newPassword')?.errors?.['minlength']">La contraseña debe tener al menos 8
+            caracteres</span>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="confirmPassword" class="form-label fw-semibold">Confirmar contraseña</label>
+        <div class="input-group">
+          <input [type]="showConfirmPassword ? 'text' : 'password'" class="form-control" id="confirmPassword"
+            formControlName="confirmPassword" placeholder="Confirma tu nueva contraseña">
+          <span class="input-group-text" (click)="toggleConfirmPasswordVisibility()">
+            <i class="bi" [class.bi-eye]="!showConfirmPassword" [class.bi-eye-slash]="showConfirmPassword"></i>
+          </span>
+        </div>
+        <div
+          *ngIf="newPasswordForm?.get('confirmPassword')?.invalid && newPasswordForm?.get('confirmPassword')?.touched"
+          class="text-danger small">
+          <span *ngIf="newPasswordForm?.get('confirmPassword')?.errors?.['required']">La confirmación de contraseña es
+            obligatoria</span>
+          <span *ngIf="newPasswordForm?.get('confirmPassword')?.errors?.['passwordMismatch']">Las contraseñas no
+            coinciden</span>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-center gap-2">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary" [disabled]="!newPasswordForm.valid">
+          Cambiar contraseña
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #changePasswordCodeTemplate>
+  <div class="container p-4">
+    <div class="text-center mb-4">
+      <h5>Cambio de contraseña</h5>
+      <p class="text-muted">Ingresa el código de 6 dígitos enviado a tu correo</p>
+    </div>
+    <form [formGroup]="resetCodeForm" (ngSubmit)="onResetCodeSubmit()">
+      <div class="mb-3">
+        <input type="text" class="form-control text-center" formControlName="code" maxlength="6"
+          placeholder="Ingresa el código">
+        <div *ngIf="resetCodeForm?.get('code')?.invalid && resetCodeForm?.get('code')?.touched"
+          class="text-danger small text-center mt-2">
+          <span *ngIf="resetCodeForm?.get('code')?.errors?.['required']">El código es obligatorio</span>
+          <span *ngIf="resetCodeForm?.get('code')?.errors?.['pattern']">El código debe tener 6 dígitos</span>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center gap-2">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary" [disabled]="!resetCodeForm.valid">
+          Verificar
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+
+<ng-template #validateTemplate>
+  <div class="d-flex justify-content-center">
+    <p>{{validateText}}</p>
+  </div>
+
+  <div class="d-flex justify-content-center">
+    <button class="btn btn-primary btn-aceptar" (click)="closeModal()">Aceptar</button>
+  </div>
+
+</ng-template>
+
+<!-- Modal de confirmación para eliminar cuenta -->
+<ng-template #deleteAccountTemplate>
+  <div class="container p-4">
+    <div class="text-center mb-4">
+      <h5>Eliminar Cuenta</h5>
+      <p class="text-muted">¿Estás seguro que deseas eliminar tu cuenta? Esta acción no se puede deshacer.</p>
+    </div>
+    <div class="d-flex justify-content-center gap-2">
+      <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+      <button type="button" class="btn btn-danger" (click)="confirmDeleteAccount()">Eliminar cuenta</button>
+    </div>
+  </div>
 </ng-template>

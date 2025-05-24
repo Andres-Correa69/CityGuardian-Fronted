@@ -35,4 +35,12 @@ export class ProfileService {
             headers: headers
         });
     }
+
+    deleteProfile(): Observable<void> {
+        const token = localStorage.getItem('AuthToken');
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
+        return this.apiService.delete<void>(`${this.endpoint}/delete`, { headers });
+    }
 }
