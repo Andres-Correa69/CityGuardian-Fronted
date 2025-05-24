@@ -11,8 +11,8 @@
         <h2 class="fw-bold mb-3 text-primary text-center text-md-start">Inicio de sesión</h2>
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
           <div class="mb-3">
-            <label for="usuario" class="form-label fw-semibold">Usuario</label>
-            <input type="text" class="form-control" id="usuario" formControlName="usuario" placeholder="Usuario">
+            <label for="email" class="form-label fw-semibold">Email</label>
+            <input type="email" class="form-control" id="email" formControlName="email" placeholder="Usuario">
             <div *ngIf="loginForm.get('usuario')?.touched && loginForm.get('usuario')?.invalid" class="text-danger small">
               El usuario es obligatorio.
             </div>

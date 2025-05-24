@@ -1,8 +1,8 @@
 export const environments = {
     production : false,
     name:'dev',
-    API_URL: 'http://localhost:3000',
-    //API_URL: 'http://127.0.0.1:8000/api',
+    //API_URL: 'https://cityguardian-backend.onrender.com/api/',
+    API_URL: 'http://127.0.0.1:8080/api/',
     firebase: {
       apiKey: "AIzaSyCJKTTjEi1FSbLbmcHHevTnuUTCl7ranMA",
       authDomain: "ibague-limpia-prod.firebaseapp.com",
