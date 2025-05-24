@@ -31,8 +31,8 @@ export class LoginComponent implements OnInit {
 
   constructor() {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
+      email: ['juan.pereddz@example.com', [Validators.required, Validators.email]],
+      password: ['MiClave123', [Validators.required]]
     });
   }
 
@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
 
   onSubmit(){
    // this.modalService.openModal(this.twoFactorTemplate, 'md', 'Autenticación de Dos Factores');
-
+    if(this.loginForm.valid){
     const loginRequest: ILoginRequest = this.loginForm.value;
     console.log(loginRequest);
     this.loaderService.showLoading();
@@ -66,6 +66,7 @@ export class LoginComponent implements OnInit {
         this.loaderService.hideLoading();
       }
     })
+   }
   
     // Redireccionar a una ruta
     //this.router.navigate(['/auth/verification']);
