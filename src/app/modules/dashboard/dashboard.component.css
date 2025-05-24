@@ -1,0 +1,48 @@
+.dashboard-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.welcome-section {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.welcome-section h1 {
+  color: #2c3e50;
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.dashboard-content {
+  display: grid;
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card h2 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+.admin-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.admin-button:hover {
+  background-color: #2980b9;
+}

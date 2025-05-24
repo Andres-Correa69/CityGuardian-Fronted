@@ -1,1 +1,40 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+  <!-- Bienvenida personalizada según el rol -->
+  <div class="welcome-section">
+    <h1 *appRole="'ADMIN'">Bienvenido Administrador</h1>
+    <h1 *appRole="'CLIENT'">Bienvenido Cliente</h1>
+  </div>
+
+  <!-- Contenido principal del dashboard -->
+  <div class="dashboard-content">
+    <!-- Sección de resumen visible para todos -->
+    <div class="card">
+      <h2>Resumen de Actividad</h2>
+      <p>Aquí podrás ver un resumen de tus actividades recientes.</p>
+    </div>
+
+    <!-- Sección de estadísticas solo visible con permiso -->
+    <div class="card" *appPermission="'canViewStatistics'">
+      <h2>Estadísticas</h2>
+      <p>Estadísticas detalladas de la plataforma.</p>
+    </div>
+
+    <!-- Sección de gestión solo visible con permiso -->
+    <div class="card" *appPermission="'canManageUsers'">
+      <h2>Gestión de Usuarios</h2>
+      <p>Panel de control para gestionar usuarios del sistema.</p>
+      <button class="admin-button" (click)="verMas()">
+        Ver más detalles
+      </button>
+    </div>
+
+    <!-- Sección de reportes -->
+    <div class="card" *appPermission="'canViewReports'">
+      <h2>Reportes</h2>
+      <p>Accede a los reportes del sistema.</p>
+      <button *appPermission="'canManageReports'" class="admin-button" (click)="gestionarReportes()">
+        Gestionar Reportes
+      </button>
+    </div>
+  </div>
+</div>

@@ -9,7 +9,7 @@ import { ServicesService } from '../../service/services.service';
 import { ILoginResponse } from '../../dto/loginResponse.interface';
 import { ILoginRequest } from '../../dto/LoginRequest.interface';
 import { TokenService } from '@core/service/token.service';
-
+import { RoleService, UserRole } from '@core/service/role.service';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit {
   private loaderService = inject(LoaderService);
   private serviceAuth = inject(ServicesService);
   private tokenService = inject(TokenService);
+  private roleService = inject(RoleService);
 
   loginForm: FormGroup;
   validateText: string = '';
@@ -33,21 +34,15 @@ export class LoginComponent implements OnInit {
 
   constructor() {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
+      email: ['juan.pereddz@example.com', [Validators.required, Validators.email]],
+      password: ['MiClave123', [Validators.required]]
     });
   }
 
   ngOnInit(): void {
-    // this.initForm();
+
   }
 
-  initForm() {
-    this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
-    });
-  }
 
   onSubmit() {
     if (this.loginForm.valid) {
@@ -58,6 +53,8 @@ export class LoginComponent implements OnInit {
         next: (res: ILoginResponse) => {
           this.loaderService.hideLoading();
           this.tokenService.setToken(res.token);
+          //this.roleService.setRole(res.user.role as UserRole);
+          this.roleService.setRole('ADMIN');
           this.router.navigate(['/city-guardian/dashboard']);
         },
         error: (err: any) => {
