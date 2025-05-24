@@ -13,6 +13,7 @@
           <tr>
             <th>Título</th>
             <th>Descripción</th>
+            <th>Ver detalle</th>
             <th>Estado</th>
             <th>Ubicación</th>
           </tr>
@@ -22,9 +23,9 @@
             <td>{{ report.title }}</td>
             <td>{{ report.description }}</td>
             <td>
-              <a (click)="verDetalle(report)" class="text-primary text-decoration-underline" style="cursor: pointer;">
+              <button (click)="verDetalle(report)" class="btn-ver-detalle">
                 Ver detalle
-              </a>
+              </button>
             </td>
             <td>{{ report.status }}</td>
             <td>{{ report.location?.latitude }} {{report.location == null || report.location.latitude == '' ? '' : ','
@@ -49,7 +50,7 @@
         <textarea class="form-control" [(ngModel)]="newReport.description" name="description" required></textarea>
       </div>
 
-      <select class="form-select mb-3" [(ngModel)]="newReport.categoryId" name="categoryId" required>
+      <select class="form-select mb-3" [(ngModel)]="newReport.category.id" name="categoryId" required>
         <option value="">Selecciona una categoría</option>
         <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
       </select>

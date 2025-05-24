@@ -6,10 +6,11 @@ import { environments } from 'src/environments/environments';
 import { Category } from '../../category/service/category.service';
 
 export interface Report {
+  id: string;
   title: string;
   description: string;
   status: string;
-  categoryId: string;
+  category: Category;
   imageUrls: string[];
   location: {
     latitude: string;
@@ -59,5 +60,13 @@ export class ReportService {
     });
 
     return this.apiService.get<Report[]>(this.endpoint, { headers });
+  }
+
+  getReportById(id: string): Observable<Report> {
+    const token = localStorage.getItem('AuthToken');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.apiService.get<Report>(`${this.endpoint}/${id}`, { headers });
   }
 }
