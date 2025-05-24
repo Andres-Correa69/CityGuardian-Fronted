@@ -79,8 +79,12 @@ export class LoginComponent implements OnInit {
             });
             return;
           }
+
           this.loaderService.hideLoading();
-          this.initLogin();
+
+          this.tokenService.setToken(res.token);
+          this.roleService.setRole(res.user.role as UserRole);
+          this.router.navigate(['/city-guardian/dashboard']);
 
         },
         error: (err: any) => {
