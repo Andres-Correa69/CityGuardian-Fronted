@@ -6,7 +6,7 @@ import { ILoginResponse } from '../dto/loginResponse.interface';
 import { ILoginRequest } from '../dto/LoginRequest.interface';
 import { IRegisterRequest } from '../dto/registerRequest.interface';
 import { HttpHeaders } from '@angular/common/http';
-
+import { IChangePasswordRequest } from '../dto/ChangePasswordRequest.interface';
 @Injectable({
   providedIn: 'root'
 })
@@ -54,12 +54,32 @@ export class AuthService {
     return this.apiService.post(`users/sendCode`, {}, { headers: new HttpHeaders({ 'Authorization': 'Bearer ' + token }) });
   }
 
+  sendResetPasswordCode(email: string) {
+    return this.apiService.post(`${this.prefix}/sendCodeByEmail`, { email });
+  }
+
   validateActivationCode(token: string, code: string) {
     return this.apiService.post(`users/verifyCode`, { code }, { headers: new HttpHeaders({ 'Authorization': 'Bearer ' + token }) });
+  }
+
+  changePassword(changePasswordRequest: IChangePasswordRequest) {
+    return this.apiService.post(`${this.prefix}/changePassword`, changePasswordRequest);
   }
 
   clearSession() {
     localStorage.removeItem('AuthToken');
     localStorage.removeItem('userRole');
   }
+
+  validateResetCode(email: string, code: string): Observable<any> {
+    return this.apiService.post<any>(`${this.prefix}/verifyCodeByEmail`, { email, code }).pipe(
+      catchError(error => {
+        if (error.error || error.message) {
+          return throwError(() => error.message);
+        }
+        return throwError(() => ({ error: true, message: 'Error al conectar con el servidor' }));
+      })
+    );
+  }
+
 }
