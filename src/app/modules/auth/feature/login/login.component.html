@@ -14,7 +14,7 @@
             <label for="email" class="form-label fw-semibold">Email</label>
             <input type="email" class="form-control" id="email" formControlName="email" placeholder="Usuario">
             <div *ngIf="loginForm?.get('email')?.invalid && loginForm?.get('email')?.touched" class="text-danger small">
-              El usuario es obligatorio.
+              El Email es obligatorio.
             </div>
           </div>
           <div class="mb-2">
