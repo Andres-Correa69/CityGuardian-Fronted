@@ -13,15 +13,18 @@ export class ApiService {
   constructor() {}
 
   private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'Ha ocurrido un error';
-    if (error.error instanceof ErrorEvent) {
-      // Error del cliente
-      errorMessage = error.error.message;
-    } else {
-      // Error del servidor
-      errorMessage = `Código de error: ${error.status}, mensaje: ${error.message}`;
+    // Preservamos la estructura del error del servidor
+    if (error.error && typeof error.error === 'object') {
+      return throwError(() => error.error);
     }
-    return throwError(() => new Error(errorMessage));
+    
+    // Si no hay estructura específica, creamos un mensaje de error
+    const errorMessage = error.error?.message || error.message || 'Error en la petición';
+    return throwError(() => ({
+      error: true,
+      message: errorMessage,
+      status: error.status
+    }));
   }
 
   get<T>(endpoint: string, params?: any) {

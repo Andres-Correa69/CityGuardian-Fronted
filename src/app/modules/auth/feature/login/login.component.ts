@@ -10,11 +10,10 @@ import { ILoginResponse } from '../../dto/loginResponse.interface';
 import { ILoginRequest } from '../../dto/LoginRequest.interface';
 import { TokenService } from '@core/service/token.service';
 
-
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule,RouterLink,ReactiveFormsModule,LoaderComponent],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, LoaderComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -25,14 +24,17 @@ export class LoginComponent implements OnInit {
   private loaderService = inject(LoaderService);
   private serviceAuth = inject(ServicesService);
   private tokenService = inject(TokenService);
+
   loginForm: FormGroup;
+  validateText: string = '';
 
   @ViewChild('twoFactorTemplate') twoFactorTemplate!: TemplateRef<any>;
+  @ViewChild('validateTemplate') validateTemplate!: TemplateRef<any>;
 
   constructor() {
     this.loginForm = this.fb.group({
-      email: ['juan.pereddz@example.com', [Validators.required, Validators.email]],
-      password: ['MiClave123', [Validators.required]]
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]]
     });
   }
 
@@ -40,41 +42,36 @@ export class LoginComponent implements OnInit {
     // this.initForm();
   }
 
-  initForm(){
+  initForm() {
     this.loginForm = this.fb.group({
-      email: ['juan.pereddz@example.com', [Validators.required, Validators.email]],
-      password: ['MiClave123', [Validators.required]]
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]]
     });
   }
 
-  onSubmit(){
-   // this.modalService.openModal(this.twoFactorTemplate, 'md', 'Autenticación de Dos Factores');
-    if(this.loginForm.valid){
-    const loginRequest: ILoginRequest = this.loginForm.value;
-    console.log(loginRequest);
-    this.loaderService.showLoading();
-    
-    this.serviceAuth.login(loginRequest).subscribe({
-      next: (res: ILoginResponse) => {
-        console.log(res);
-        this.loaderService.hideLoading();
-        this.tokenService.setToken(res.token);
-        this.router.navigate(['/city-guardian/dashboard']);
-      },
-      error: (err: any) => {
-        console.log(err);
-        this.loaderService.hideLoading();
-      }
-    })
-   }
-  
-    // Redireccionar a una ruta
-    //this.router.navigate(['/auth/verification']);
+  onSubmit() {
+    if (this.loginForm.valid) {
+      const loginRequest: ILoginRequest = this.loginForm.value;
+      this.loaderService.showLoading();
+      
+      this.serviceAuth.login(loginRequest).subscribe({
+        next: (res: ILoginResponse) => {
+          this.loaderService.hideLoading();
+          this.tokenService.setToken(res.token);
+          this.router.navigate(['/city-guardian/dashboard']);
+        },
+        error: (err: any) => {
+          console.log('Error en el login');
+          console.log(err);
+          this.loaderService.hideLoading();
+          this.validateText = err || 'Error al iniciar sesión';
+          this.modalService.openModal(this.validateTemplate, 'md', 'Error al iniciar sesión');
+        }
+      });
+    }
   }
 
-  closeModal(){
+  closeModal() {
     this.modalService.closeModal();
   }
-
-
 }
