@@ -16,9 +16,9 @@ export class IndexCategoryComponent implements OnInit {
   private categoryService = inject(CategoryService);
   private modalService = inject(ModalDesignService);
   private loaderService = inject(LoaderService);
-  
+
   @ViewChild('createCategoryTemplate') createCategoryTemplate!: TemplateRef<any>;
-  
+
   categories: Category[] = [];
   newCategory: Category = {
     id: '',

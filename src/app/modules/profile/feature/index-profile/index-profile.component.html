@@ -1,0 +1,45 @@
+<div class="profile-bg">
+  <!-- Encabezado con fondo fijo -->
+  <div class="profile-header position-relative">
+    <img src="/assets/profile/font-profile.png" alt="Fondo de perfil" class="header-img">
+  </div>
+
+  <!-- Tarjeta de usuario simplificada -->
+  <div class="profile-card d-flex align-items-center px-4 mt-0">
+    <div class="flex-grow-1">
+      <div class="fw-bold text-white fs-5">{{ profile?.name }} {{ profile?.lastName }}</div>
+      <div class="text-white-50">{{ profile?.email }}</div>
+    </div>
+    <button class="btn btn-primary ms-auto">Editar Perfil</button>
+  </div>
+
+  <!-- Información del usuario (no editable) -->
+  <div class="profile-info mt-5">
+    <div class="row mb-4">
+      <div class="col-md-6 mb-3 mb-md-0">
+        <div class="info-label">Nombre</div>
+        <div class="info-value">{{ profile?.name }}</div>
+      </div>
+      <div class="col-md-6">
+        <div class="info-label">Apellido</div>
+        <div class="info-value">{{ profile?.lastName }}</div>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-md-6 mb-3 mb-md-0">
+        <div class="info-label">Teléfono</div>
+        <div class="info-value">{{ profile?.phone }}</div>
+      </div>
+      <div class="col-md-6">
+        <div class="info-label">Dirección</div>
+        <div class="info-value">{{ profile?.address }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botones de acción -->
+  <div class="d-flex justify-content-center gap-4 mt-5">
+    <button type="button" class="btn btn-outline-primary">Recuperar contraseña</button>
+    <button type="button" class="btn btn-danger">Eliminar cuenta</button>
+  </div>
+</div>

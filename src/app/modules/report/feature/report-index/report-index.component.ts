@@ -7,6 +7,7 @@ import { ModalDesignService } from 'src/app/shared/ui/modals/modal-design/modal-
 import { LoaderService } from 'src/app/shared/ui/loading/loader/loader.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Category } from 'src/app/modules/category/service/category.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-report-index',
@@ -21,6 +22,7 @@ export class ReportIndexComponent implements OnInit {
   private modalService = inject(ModalDesignService);
   private loaderService = inject(LoaderService);
   private ngbModal = inject(NgbModal);
+  private router = inject(Router);
 
   @ViewChild('createReportTemplate') createReportTemplate!: TemplateRef<any>;
 
@@ -28,10 +30,15 @@ export class ReportIndexComponent implements OnInit {
   selectedImages: File[] = [];
   categories: Category[] = [];
   newReport: Report = {
+    id: '',
     title: '',
     description: '',
     status: 'CREATED',
-    categoryId: '',
+    category: {
+      id: '',
+      name: '',
+      description: ''
+    },
     imageUrls: [],
     location: {
       latitude: '',
@@ -106,15 +113,20 @@ export class ReportIndexComponent implements OnInit {
   }
 
   verDetalle(report: Report) {
-    console.log(report);
+    this.router.navigate(['/city-guardian/report/detail', report.id]);
   }
 
   private resetForm(): void {
     this.newReport = {
+      id: '',
       title: '',
       description: '',
       status: 'CREATED',
-      categoryId: '',
+      category: {
+        id: '',
+        name: '',
+        description: ''
+      },
       imageUrls: [],
       location: {
         latitude: '',
