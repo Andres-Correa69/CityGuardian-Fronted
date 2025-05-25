@@ -84,6 +84,38 @@ export class ReportService {
     return this.apiService.get<IReportResponse>(`${this.endpoint}/${id}`, { headers });
   }
 
+  verifyReport(id: string): Observable<any> {
+    const token = localStorage.getItem('AuthToken');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.apiService.patch(`${this.endpoint}/${id}/verify`, {}, { headers });
+  }
+
+  rejectReport(id: string, rejectReason: string): Observable<any> {
+    const token = localStorage.getItem('AuthToken');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.apiService.patch(`${this.endpoint}/${id}/reject?rejectReason=${encodeURIComponent(rejectReason)}`, {}, { headers });
+  }
+
+  resolveReport(id: string): Observable<any> {
+    const token = localStorage.getItem('AuthToken');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.apiService.patch(`${this.endpoint}/${id}/resolve`, {}, { headers });
+  }
+
+  reviewReport(id: string): Observable<any> {
+    const token = localStorage.getItem('AuthToken');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.apiService.patch(`${this.endpoint}/${id}/review`, {}, { headers });
+  }
+
   markAsImportant(reportId: string, important: boolean = true): Observable<any> {
     const token = localStorage.getItem('AuthToken');
     const headers = new HttpHeaders({

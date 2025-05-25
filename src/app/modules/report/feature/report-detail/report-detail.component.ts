@@ -5,11 +5,13 @@ import { ReportService, Report } from '../../service/report.service';
 import { LoaderService } from 'src/app/shared/ui/loading/loader/loader.service';
 import { MapService } from 'src/app/modules/map/service/map.service';
 import { IReportResponse } from '../../dto/reportResponse.interface';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-report-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './report-detail.component.html',
   styleUrl: './report-detail.component.css'
 })
@@ -19,8 +21,10 @@ export class ReportDetailComponent implements OnInit, AfterViewInit {
   private reportService = inject(ReportService);
   private loaderService = inject(LoaderService);
   private mapService = inject(MapService);
+  public modalService = inject(NgbModal);
 
   report: IReportResponse | null = null;
+  rejectReason: string = '';
 
   ngOnInit(): void {
     this.loadReport();
@@ -84,5 +88,85 @@ export class ReportDetailComponent implements OnInit, AfterViewInit {
         }
       });
     }
+  }
+
+  verifyReport(): void {
+    if (this.report) {
+      this.loaderService.showLoading();
+      this.reportService.verifyReport(this.report.id).subscribe({
+        next: () => {
+          this.loadReport();
+          alert('Reporte verificado exitosamente');
+        },
+        error: (error) => {
+          console.error('Error al verificar el reporte:', error);
+          alert('Error al verificar el reporte');
+          this.loaderService.hideLoading();
+        }
+      });
+    }
+  }
+
+  openRejectModal(content: any): void {
+    this.modalService.open(content, { centered: true });
+  }
+
+  rejectReport(): void {
+    if (this.report && this.rejectReason.trim()) {
+      this.loaderService.showLoading();
+      this.reportService.rejectReport(this.report.id, this.rejectReason).subscribe({
+        next: () => {
+          this.modalService.dismissAll();
+          this.loadReport();
+          this.rejectReason = '';
+          alert('Reporte rechazado exitosamente');
+        },
+        error: (error) => {
+          console.error('Error al rechazar el reporte:', error);
+          alert('Error al rechazar el reporte');
+          this.loaderService.hideLoading();
+        }
+      });
+    } else {
+      alert('Por favor, ingrese un motivo para el rechazo');
+    }
+  }
+
+  resolveReport(): void {
+    if (this.report) {
+      this.loaderService.showLoading();
+      this.reportService.resolveReport(this.report.id).subscribe({
+        next: () => {
+          this.loadReport();
+          alert('Reporte resuelto exitosamente');
+        },
+        error: (error) => {
+          console.error('Error al resolver el reporte:', error);
+          alert('Error al resolver el reporte');
+          this.loaderService.hideLoading();
+        }
+      });
+    }
+  }
+
+  reviewReport(): void {
+    if (this.report) {
+      this.loaderService.showLoading();
+      this.reportService.reviewReport(this.report.id).subscribe({
+        next: () => {
+          this.loadReport();
+          alert('Reporte enviado a revisión exitosamente');
+        },
+        error: (error) => {
+          console.error('Error al enviar el reporte a revisión:', error);
+          alert('Error al enviar el reporte a revisión');
+          this.loaderService.hideLoading();
+        }
+      });
+    }
+  }
+
+  isButtonDisabled(status: string): boolean {
+    return this.report?.status === status;
   }
 }
