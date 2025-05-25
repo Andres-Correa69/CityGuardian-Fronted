@@ -28,7 +28,7 @@
               </button>
             </td>
             <td>{{ report.status }}</td>
-            <td>{{ report.location?.latitude }} {{report.location == null || report.location.latitude == '' ? '' : ','
+            <td>{{ report.location?.latitude }} {{report.location == null ? '' : ','
               }} {{ report.location?.longitude }}
             </td>
           </tr>

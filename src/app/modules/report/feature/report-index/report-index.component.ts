@@ -42,10 +42,7 @@ export class ReportIndexComponent implements OnInit {
       description: ''
     },
     imageUrls: [],
-    location: {
-      latitude: '',
-      longitude: ''
-    }
+    location: null
   };
 
   ngOnInit(): void {
@@ -142,10 +139,7 @@ export class ReportIndexComponent implements OnInit {
         description: ''
       },
       imageUrls: [],
-      location: {
-        latitude: '',
-        longitude: ''
-      }
+      location: null
     };
     this.selectedImages = [];
   }

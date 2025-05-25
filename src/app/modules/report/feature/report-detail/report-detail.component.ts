@@ -20,6 +20,8 @@ export class ReportDetailComponent implements OnInit, AfterViewInit {
   private mapService = inject(MapService);
 
   report: IReportResponse | null = null;
+  mostrandoReportesCercanos = false;
+  mostrandoZonasRiesgo = false;
 
   ngOnInit(): void {
     this.loadReport();
@@ -56,10 +58,69 @@ export class ReportDetailComponent implements OnInit, AfterViewInit {
 
   initMap(): void {
     if (this.report && this.report.location) {
-      const lat = parseFloat(this.report.location.latitude);
-      const lng = parseFloat(this.report.location.longitude);
+      const lat = this.report.location.latitude;
+      const lng = this.report.location.longitude;
       this.mapService.crearMapaConMarcador('mapa-detalle', [lng, lat]);
     }
+  }
+
+  mostrarReportesCercanos(): void {
+    if (this.report && this.report.location) {
+      this.mostrandoReportesCercanos = true;
+      this.mostrandoZonasRiesgo = false;
+      this.mapService.limpiarZonasAltoRiesgo();
+
+      this.reportService.getReportesCercanos(
+        this.report.location.latitude,
+        this.report.location.longitude
+      ).subscribe({
+        next: (reportes) => {
+          if (Array.isArray(reportes) && reportes.length > 0) {
+            this.mapService.mostrarReportesCercanos(reportes);
+          } else {
+            alert('No se encontraron reportes cercanos');
+            this.mostrandoReportesCercanos = false;
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener reportes cercanos:', error);
+          alert('Error al obtener los reportes cercanos');
+          this.mostrandoReportesCercanos = false;
+        }
+      });
+    }
+  }
+
+  mostrarZonasAltoRiesgo(): void {
+    if (this.report && this.report.location) {
+      this.mostrandoZonasRiesgo = true;
+
+      this.reportService.getReportesCercanos(
+        this.report.location.latitude,
+        this.report.location.longitude
+      ).subscribe({
+        next: (reportes) => {
+          if (Array.isArray(reportes) && reportes.length > 0) {
+            this.mapService.mostrarZonasAltoRiesgo(reportes);
+          } else {
+            alert('No se encontraron reportes para mostrar zonas de riesgo');
+            this.mostrandoZonasRiesgo = false;
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener zonas de riesgo:', error);
+          alert('Error al obtener las zonas de riesgo');
+          this.mostrandoZonasRiesgo = false;
+        }
+      });
+    }
+  }
+
+  volverAMapaOriginal(): void {
+    this.mostrandoReportesCercanos = false;
+    this.mostrandoZonasRiesgo = false;
+    this.mapService.volverAMapaOriginal();
+    this.initMap();
   }
 
   volver(): void {

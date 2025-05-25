@@ -41,24 +41,9 @@ export class MapIndexComponent implements OnInit, OnDestroy {
   private loadReports() {
     this.reportService.getReports().subscribe({
       next: (reports) => {
-        const reportesDTO = reports
-          .filter(report => report.location && report.location.latitude && report.location.longitude)
-          .map(report => ({
-            id: report.id,
-            titulo: report.title,
-            descripcion: report.description,
-            ubicacion: {
-              latitud: parseFloat(report.location!.latitude),
-              longitud: parseFloat(report.location!.longitude)
-            },
-            estado: this.mapEstado(report.status),
-            tipo: report.category.name,
-            usuarioId: '',
-            fecha: new Date()
-          }));
 
         // Pintar los marcadores en el mapa
-        this.mapService.pintarMarcadores(reportesDTO);
+        this.mapService.pintarMarcadores(reports);
 
         // Cambiar el cursor al pasar sobre los marcadores
         this.mapService.mapa.on('mouseenter', () => {
@@ -73,18 +58,5 @@ export class MapIndexComponent implements OnInit, OnDestroy {
         console.error('Error loading reports:', error);
       }
     });
-  }
-
-  private mapEstado(status: string): 'PENDIENTE' | 'EN_PROCESO' | 'RESUELTO' {
-    switch (status.toUpperCase()) {
-      case 'CREATED':
-        return 'PENDIENTE';
-      case 'IN_PROGRESS':
-        return 'EN_PROCESO';
-      case 'COMPLETED':
-        return 'RESUELTO';
-      default:
-        return 'PENDIENTE';
-    }
   }
 }

@@ -14,8 +14,8 @@ export interface Report {
   category: Category;
   imageUrls: string[];
   location: {
-    latitude: string;
-    longitude: string;
+    latitude: number;
+    longitude: number;
   } | null;
 }
 
@@ -26,8 +26,8 @@ export interface ReportRequest {
   status: string;
   imageUrls: string[];
   location: {
-    latitude: string;
-    longitude: string;
+    latitude: number;
+    longitude: number;
   } | null;
 }
 
@@ -81,5 +81,17 @@ export class ReportService {
       'Authorization': `Bearer ${token}`
     });
     return this.apiService.get<IReportResponse>(`${this.endpoint}/${id}`, { headers });
+  }
+
+  getReportesCercanos(latitud: number, longitud: number): Observable<Report[]> {
+    const token = localStorage.getItem('AuthToken');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.apiService.get<Report[]>(
+      `${this.endpoint}/nearby?latitud=${latitud}&longitud=${longitud}`,
+      { headers }
+    );
   }
 }
