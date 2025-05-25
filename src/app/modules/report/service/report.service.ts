@@ -19,6 +19,18 @@ export interface Report {
   } | null;
 }
 
+export interface ReportRequest {
+  title: string;
+  description: string;
+  categoryId: string;
+  status: string;
+  imageUrls: string[];
+  location: {
+    latitude: string;
+    longitude: string;
+  } | null;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -31,7 +43,7 @@ export class ReportService {
     return this.apiService.get<Category[]>(this.categoryEndpoint);
   }
 
-  createReport(report: Report, images: File[]): Observable<any> {
+  createReport(report: ReportRequest, images: File[]): Observable<any> {
     const token = localStorage.getItem('AuthToken');
     const formData = new FormData();
 
@@ -47,7 +59,7 @@ export class ReportService {
     }
 
     // No establecemos ningún Content-Type, dejamos que el navegador lo maneje
-    return this.apiService.post<any>(`${this.endpoint}/create`, formData, {
+    return this.apiService.postFormData<any>(`${this.endpoint}/create`, formData, {
       headers: new HttpHeaders({
         'Authorization': `Bearer ${token}`
       })

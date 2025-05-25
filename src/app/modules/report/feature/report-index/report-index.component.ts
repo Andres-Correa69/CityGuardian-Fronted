@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MapService } from 'src/app/modules/map/service/map.service';
-import { ReportService, Report } from '../../service/report.service';
+import { ReportService, Report, ReportRequest } from '../../service/report.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalDesignService } from 'src/app/shared/ui/modals/modal-design/modal-design.service';
@@ -97,7 +97,15 @@ export class ReportIndexComponent implements OnInit {
 
   createReport(): void {
     this.loaderService.showLoading();
-    this.reportService.createReport(this.newReport, this.selectedImages).subscribe({
+    const reportRequest: ReportRequest = {
+      title: this.newReport.title,
+      description: this.newReport.description,
+      categoryId: this.newReport.category.id,
+      status: this.newReport.status,
+      imageUrls: this.newReport.imageUrls,
+      location: this.newReport.location
+    };
+    this.reportService.createReport(reportRequest, this.selectedImages).subscribe({
       next: (response) => {
         console.log('Reporte creado:', response);
         this.loadReports();
