@@ -120,7 +120,7 @@ export class ReportDetailComponent implements OnInit, AfterViewInit {
       setTimeout(() => {
         this.mapService.crearMapa();
         this.mapService.agregarMarcador().subscribe((marcador) => {
-          
+
           this.newReport.location = {
             latitude: marcador.lat.toString(),
             longitude: marcador.lng.toString()
