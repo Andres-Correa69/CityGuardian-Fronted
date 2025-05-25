@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import mapboxgl, { LngLatLike } from 'mapbox-gl';
 import { ReporteDTO } from '../model/reporte.dto';
+import { Report } from '../../report/service/report.service';
 
 @Injectable({
   providedIn: 'root'
@@ -69,17 +70,17 @@ export class MapService {
   }
 
 
-  public pintarMarcadores(reportes: ReporteDTO[]) {
+  public pintarMarcadores(reportes: Report[]) {
     reportes.forEach(reporte => {
       // Determinar el color del marcador basado en si es importante
       const markerColor = reporte.important ? 'yellow' : 'red';
-      
+
       const marker = new mapboxgl.Marker({ color: markerColor })
-        .setLngLat([reporte.ubicacion.longitud, reporte.ubicacion.latitud])
+        .setLngLat([reporte.location!.longitude, reporte.location!.latitude])
         .setPopup(new mapboxgl.Popup().setHTML(`
           <div>
-            <h3>${reporte.titulo}</h3>
-            <p>${reporte.descripcion}</p>
+            <h3>${reporte.title}</h3>
+            <p>${reporte.description}</p>
             ${reporte.important ? '<p style="color: gold;">⭐ Importante</p>' : ''}
             <button onclick="window.dispatchEvent(new CustomEvent('markAsImportant', { detail: { reportId: '${reporte.id}' } }))" 
                     style="background-color: #4CAF50; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;">
@@ -97,6 +98,7 @@ export class MapService {
       });
 
       marker.addTo(this.mapa);
+
     });
   }
 
@@ -141,5 +143,122 @@ export class MapService {
     new mapboxgl.Marker({ color: 'red' })
       .setLngLat(center)
       .addTo(this.mapa);
+  }
+
+  public mostrarReportesCercanos(reportes: Report[]) {
+    // Limpiar marcadores existentes
+    this.marcadores.forEach(marcador => marcador.remove());
+    this.marcadores = [];
+
+    // Agregar nuevos marcadores
+    reportes.forEach(reporte => {
+      if (reporte.location) {
+        const marker = new mapboxgl.Marker({ color: 'red' })
+          .setLngLat([reporte.location.longitude, reporte.location.latitude])
+          .setPopup(new mapboxgl.Popup().setHTML(reporte.title));
+
+        marker.getElement().addEventListener('click', () => {
+          console.log('Marcador clickeado:', reporte.id);
+          const event = new CustomEvent('markerClick', { detail: { reportId: reporte.id } });
+          window.dispatchEvent(event);
+        });
+
+        marker.addTo(this.mapa);
+        this.marcadores.push(marker);
+      }
+    });
+
+    // Ajustar la vista del mapa para mostrar todos los marcadores
+    if (reportes.length > 0) {
+      const bounds = new mapboxgl.LngLatBounds();
+      reportes.forEach(reporte => {
+        if (reporte.location) {
+          bounds.extend([reporte.location.longitude, reporte.location.latitude]);
+        }
+      });
+      this.mapa.fitBounds(bounds, { padding: 50 });
+    }
+  }
+
+  public mostrarZonasAltoRiesgo(reportes: Report[]) {
+    // Filtrar reportes con ubicación válida
+    const reportesConUbicacion = reportes.filter(
+      reporte => reporte.location && reporte.location.longitude && reporte.location.latitude
+    );
+
+    if (reportesConUbicacion.length < 3) {
+      alert('Se necesitan al menos 3 reportes para crear una zona de riesgo');
+      return;
+    }
+
+    // Crear un array de coordenadas para el polígono
+    const coordinates = reportesConUbicacion.map(reporte => [
+      reporte.location!.longitude,
+      reporte.location!.latitude
+    ]);
+
+    // Cerrar el polígono
+    coordinates.push(coordinates[0]);
+
+    // Limpiar capas existentes
+    this.limpiarZonasAltoRiesgo();
+
+    // Agregar el polígono al mapa
+    this.mapa.addSource('zona-riesgo', {
+      type: 'geojson',
+      data: {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Polygon',
+          coordinates: [coordinates]
+        }
+      }
+    });
+
+    this.mapa.addLayer({
+      id: 'zona-riesgo-layer',
+      type: 'fill',
+      source: 'zona-riesgo',
+      layout: {},
+      paint: {
+        'fill-color': '#ff0000',
+        'fill-opacity': 0.3
+      }
+    });
+
+    // Ajustar la vista del mapa para mostrar todo el polígono
+    const bounds = new mapboxgl.LngLatBounds();
+    coordinates.forEach(coord => {
+      bounds.extend([coord[0], coord[1]]);
+    });
+    this.mapa.fitBounds(bounds, { padding: 50 });
+  }
+
+  public limpiarZonasAltoRiesgo() {
+    if (this.mapa.getLayer('zona-riesgo-layer')) {
+      this.mapa.removeLayer('zona-riesgo-layer');
+    }
+    if (this.mapa.getSource('zona-riesgo')) {
+      this.mapa.removeSource('zona-riesgo');
+    }
+  }
+
+  public volverAMapaOriginal() {
+    // Limpiar marcadores
+    this.marcadores.forEach(marcador => marcador.remove());
+    this.marcadores = [];
+
+    // Limpiar zonas de riesgo
+    this.limpiarZonasAltoRiesgo();
+
+    // Volver a la vista original
+    if (this.posicionActual) {
+      this.mapa.flyTo({
+        center: this.posicionActual,
+        zoom: 17,
+        essential: true
+      });
+    }
   }
 }

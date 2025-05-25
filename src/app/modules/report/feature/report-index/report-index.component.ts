@@ -8,6 +8,7 @@ import { LoaderService } from 'src/app/shared/ui/loading/loader/loader.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Category } from 'src/app/modules/category/service/category.service';
 import { Router } from '@angular/router';
+import { RoleService } from '@core/service/role.service';
 
 @Component({
   selector: 'app-report-index',
@@ -23,6 +24,7 @@ export class ReportIndexComponent implements OnInit {
   private loaderService = inject(LoaderService);
   private ngbModal = inject(NgbModal);
   private router = inject(Router);
+  private roleService = inject(RoleService);
 
   @ViewChild('createReportTemplate') createReportTemplate!: TemplateRef<any>;
 
@@ -40,15 +42,16 @@ export class ReportIndexComponent implements OnInit {
       description: ''
     },
     imageUrls: [],
-    location: {
-      latitude: '',
-      longitude: ''
-    }
+    location: null
   };
 
   ngOnInit(): void {
     this.loadCategories();
     this.loadReports();
+  }
+
+  canCreateReports() {
+    return this.roleService.canCreateReports();
   }
 
   loadCategories(): void {
@@ -136,10 +139,7 @@ export class ReportIndexComponent implements OnInit {
         description: ''
       },
       imageUrls: [],
-      location: {
-        latitude: '',
-        longitude: ''
-      }
+      location: null
     };
     this.selectedImages = [];
   }

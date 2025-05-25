@@ -80,9 +80,12 @@
             <div class="mb-4">
                 <h5>Estado</h5>
                 <div class="card p-3" style="background: #f8fafc; border-radius: 12px;">
-                    <div *ngFor="let state of report.stateHistory; let last = last" class="d-flex align-items-start mb-3 position-relative" [ngStyle]="{'padding-bottom': !last ? '18px' : '0'}">
+                    <div *ngFor="let state of report.stateHistory; let last = last"
+                        class="d-flex align-items-start mb-3 position-relative"
+                        [ngStyle]="{'padding-bottom': !last ? '18px' : '0'}">
                         <!-- Línea vertical para conectar los estados -->
-                        <div style="width: 24px; display: flex; flex-direction: column; align-items: center; position: relative;">
+                        <div
+                            style="width: 24px; display: flex; flex-direction: column; align-items: center; position: relative;">
                             <ng-container [ngSwitch]="state.status">
                                 <span *ngSwitchCase="'Creado'">
                                     <i class="bi bi-circle" style="color: #b0b0b0; font-size: 1.5rem;"></i>
@@ -101,7 +104,8 @@
                                 </span>
                             </ng-container>
                             <!-- Línea vertical solo si no es el último -->
-                            <div *ngIf="!last" style="width: 2px; height: 32px; background: #d1d5db; margin-top: 2px;"></div>
+                            <div *ngIf="!last" style="width: 2px; height: 32px; background: #d1d5db; margin-top: 2px;">
+                            </div>
                         </div>
                         <div class="ms-3 flex-grow-1">
                             <div class="fw-semibold" style="font-size: 1.08rem;">
@@ -121,6 +125,24 @@
             <!-- Sección del mapa - solo si hay ubicación -->
             <div *ngIf="report.location && report.location.latitude && report.location.longitude">
                 <h5>Ubicación en el mapa</h5>
+
+                <div class="mb-3">
+                    <button class="btn btn-primary me-2" (click)="mostrarReportesCercanos()"
+                        *ngIf="!mostrandoReportesCercanos">
+                        Ver Reportes Cercanos
+                    </button>
+
+                    <button class="btn btn-warning me-2" (click)="mostrarZonasAltoRiesgo()"
+                        *ngIf="mostrandoReportesCercanos && !mostrandoZonasRiesgo">
+                        Ver Zonas de Alto Riesgo
+                    </button>
+
+                    <button class="btn btn-secondary" (click)="volverAMapaOriginal()"
+                        *ngIf="mostrandoReportesCercanos || mostrandoZonasRiesgo">
+                        Volver al Mapa Original
+                    </button>
+                </div>
+
                 <div id="mapa-detalle" style="height: 300px; width: 100%; border-radius: 8px;"></div>
             </div>
         </div>

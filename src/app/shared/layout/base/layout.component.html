@@ -16,16 +16,16 @@
           <a [routerLink]="['/city-guardian/profile']"><span class="fa fa-user mr-3"></span> Pefil</a>
         </li>
         <li>
-          <a [routerLink]="['/city-guardian/map']"><span class="fa fa-map-marker mr-3"></span> Mapa</a>
+          <a [routerLink]="['/city-guardian/map']"><span class="fa fa-map mr-3"></span> Mapa</a>
         </li>
         <li>
-          <a [routerLink]="['/city-guardian/report']" ><span class="fa fa-briefcase mr-3"></span> Reporte</a>
+          <a [routerLink]="['/city-guardian/report']"><span class="fa fa-file-text mr-3"></span> Reporte</a>
         </li>
-        <li>
+        <li *ngIf="canViewCategories()">
           <a [routerLink]="['/city-guardian/category']"><span class="fa fa-map-marker mr-3"></span> Categoría</a>
         </li>
         <li>
-          <a (click)="logout()" ><span class="fa fa-briefcase mr-3"></span> Cerrar Sesión</a>
+          <a (click)="logout()"><span class="fa fa-cog mr-3"></span> Cerrar Sesión</a>
         </li>
       </ul>
 
