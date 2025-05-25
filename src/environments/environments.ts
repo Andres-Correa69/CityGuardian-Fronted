@@ -4,15 +4,15 @@ export const environments = {
     //API_URL: 'https://cityguardian-backend.onrender.com/api/',
     API_URL: 'http://127.0.0.1:8080/api/',
     firebase: {
-      apiKey: "AIzaSyCJKTTjEi1FSbLbmcHHevTnuUTCl7ranMA",
-      authDomain: "ibague-limpia-prod.firebaseapp.com",
-      databaseURL: "https://ibague-limpia-prod-default-rtdb.firebaseio.com",
-      projectId: "ibague-limpia-prod",
-      storageBucket: "ibague-limpia-prod.firebasestorage.app",
-      messagingSenderId: "1004320928371",
-      appId: "1:1004320928371:web:d83db6612c38aec810b006",
-      measurementId: "G-M28TSDXJ4N"
+      apiKey: "AIzaSyCuomevMvamgOQBoiLILHjIYMxy8LpcJKs",
+      authDomain: "cityguardian-b35a8.firebaseapp.com",
+      projectId: "cityguardian-b35a8",
+      storageBucket: "cityguardian-b35a8.firebasestorage.app",
+      messagingSenderId: "1087115835217",
+      appId: "1:1087115835217:web:6bd2c8c238c2c4f1f80570",
+      measurementId: "G-VWFQK3Y7G0"
     },
-    vapidKey: 'BC55gi-HbYRDJa-NxnxBrtIuXVJ5RbZ5-hhHNYEi2Wi9kayBvsdmFDnKs-5gnrAZAXgWuyZ_y4Yljyx71YJb6sU'
-  }
+    vapidKey: 'BExfDEtwuVrCjdVBwlR-YLMFxVk29ocp_A7Et-s68l7o_oGpxjEQuYZ9egEdymPBz69PpxYDjrhYxeXoNkzOqho'
+    
+  } 
 
