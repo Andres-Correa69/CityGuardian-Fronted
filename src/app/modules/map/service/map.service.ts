@@ -71,9 +71,22 @@ export class MapService {
 
   public pintarMarcadores(reportes: ReporteDTO[]) {
     reportes.forEach(reporte => {
-      const marker = new mapboxgl.Marker({ color: 'red' })
+      // Determinar el color del marcador basado en si es importante
+      const markerColor = reporte.important ? 'yellow' : 'red';
+      
+      const marker = new mapboxgl.Marker({ color: markerColor })
         .setLngLat([reporte.ubicacion.longitud, reporte.ubicacion.latitud])
-        .setPopup(new mapboxgl.Popup().setHTML(reporte.titulo));
+        .setPopup(new mapboxgl.Popup().setHTML(`
+          <div>
+            <h3>${reporte.titulo}</h3>
+            <p>${reporte.descripcion}</p>
+            ${reporte.important ? '<p style="color: gold;">⭐ Importante</p>' : ''}
+            <button onclick="window.dispatchEvent(new CustomEvent('markAsImportant', { detail: { reportId: '${reporte.id}' } }))" 
+                    style="background-color: #4CAF50; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;">
+              ${reporte.important ? '⭐ Ya es importante' : '⭐ Marcar como importante'}
+            </button>
+          </div>
+        `));
 
       // Agregar el evento de clic al marcador
       marker.getElement().addEventListener('click', () => {

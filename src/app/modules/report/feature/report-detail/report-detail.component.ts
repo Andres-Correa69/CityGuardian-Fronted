@@ -5,6 +5,7 @@ import { ReportService, Report } from '../../service/report.service';
 import { LoaderService } from 'src/app/shared/ui/loading/loader/loader.service';
 import { MapService } from 'src/app/modules/map/service/map.service';
 import { IReportResponse } from '../../dto/reportResponse.interface';
+
 @Component({
   selector: 'app-report-detail',
   standalone: true,
@@ -64,5 +65,24 @@ export class ReportDetailComponent implements OnInit, AfterViewInit {
 
   volver(): void {
     this.router.navigate(['/city-guardian/report/index']);
+  }
+
+  toggleImportant(): void {
+    if (this.report) {
+      const newImportantState = !this.report.important;
+      this.reportService.markAsImportant(this.report.id, newImportantState).subscribe({
+        next: () => {
+          // Actualizar el estado local
+          if (this.report) {
+            this.report.important = newImportantState;
+          }
+          alert(this.report?.important ? 'Reporte marcado como importante' : 'Reporte desmarcado como importante');
+        },
+        error: (error) => {
+          console.error('Error al cambiar el estado de importante:', error);
+          alert('Error al cambiar el estado de importante');
+        }
+      });
+    }
   }
 }

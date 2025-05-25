@@ -23,6 +23,13 @@
                 <div class="col-md-8">
                     <div>
                         <span class="badge bg-info text-dark">{{ report.status }}</span>
+                        <button class="btn ms-2" 
+                                [class.btn-warning]="report.important"
+                                [class.btn-outline-warning]="!report.important"
+                                (click)="toggleImportant()">
+                            <i class="bi" [class.bi-star-fill]="report.important" [class.bi-star]="!report.important"></i>
+                            {{ report.important ? 'Importante' : 'Marcar como importante' }}
+                        </button>
                     </div>
                     <div>
                         <strong>Categoría:</strong> {{ report.category.name }}<br>

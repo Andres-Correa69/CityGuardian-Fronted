@@ -28,13 +28,24 @@ export class MapIndexComponent implements OnInit, OnDestroy {
       console.log('Navegando al reporte:', reportId);
       this.router.navigate(['/city-guardian/report/detail', reportId]);
     }) as EventListener);
+
+    // Escuchar el evento de marcar como importante
+    window.addEventListener('markAsImportant', ((event: CustomEvent) => {
+      const reportId = event.detail.reportId;
+      this.markAsImportant(reportId);
+    }) as EventListener);
   }
 
   ngOnDestroy(): void {
-    // Limpiar el evento cuando el componente se destruye
+    // Limpiar los eventos cuando el componente se destruye
     window.removeEventListener('markerClick', ((event: CustomEvent) => {
       const reportId = event.detail.reportId;
       this.router.navigate(['/city-guardian/report/detail', reportId]);
+    }) as EventListener);
+
+    window.removeEventListener('markAsImportant', ((event: CustomEvent) => {
+      const reportId = event.detail.reportId;
+      this.markAsImportant(reportId);
     }) as EventListener);
   }
 
@@ -54,7 +65,8 @@ export class MapIndexComponent implements OnInit, OnDestroy {
             estado: this.mapEstado(report.status),
             tipo: report.category.name,
             usuarioId: '',
-            fecha: new Date()
+            fecha: new Date(),
+            important: report.important || false
           }));
 
         // Pintar los marcadores en el mapa
@@ -86,5 +98,19 @@ export class MapIndexComponent implements OnInit, OnDestroy {
       default:
         return 'PENDIENTE';
     }
+  }
+
+  markAsImportant(reportId: string) {
+    this.reportService.markAsImportant(reportId).subscribe({
+      next: () => {
+        alert('Reporte marcado como importante');
+        // Recargar los reportes para actualizar el estado
+        this.loadReports();
+      },
+      error: (error) => {
+        console.error('Error al marcar como importante:', error);
+        alert('Error al marcar como importante');
+      }
+    });
   }
 }

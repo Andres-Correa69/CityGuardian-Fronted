@@ -12,4 +12,5 @@ export interface ReporteDTO {
   estado: 'PENDIENTE' | 'EN_PROCESO' | 'RESUELTO';
   tipo: string;
   usuarioId: string;
+  important?: boolean;
 } 

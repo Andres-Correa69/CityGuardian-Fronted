@@ -90,6 +90,20 @@ export class ApiService {
       );
   }
 
+  put<T>(endpoint: string, body: any, options: any = {}) {
+    const requestOptions = {
+      ...options,
+      headers: options.headers || new HttpHeaders()
+    };
+
+    return this.http.put<T>(`${this.baseUrl}${endpoint}`, body, requestOptions)
+      .pipe(
+        map(response => response as T),
+        catchError(this.handleError)
+      );
+  }
+
+
   delete<T>(endpoint: string, options: any = {}) {
     return this.http.delete<T>(`${this.baseUrl}${endpoint}`, options)
       .pipe(

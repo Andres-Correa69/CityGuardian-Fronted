@@ -17,6 +17,7 @@ export interface Report {
     latitude: string;
     longitude: string;
   } | null;
+  important?: boolean;
 }
 
 export interface ReportRequest {
@@ -81,5 +82,20 @@ export class ReportService {
       'Authorization': `Bearer ${token}`
     });
     return this.apiService.get<IReportResponse>(`${this.endpoint}/${id}`, { headers });
+  }
+
+  markAsImportant(reportId: string, important: boolean = true): Observable<any> {
+    const token = localStorage.getItem('AuthToken');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    
+    // Si es importante, usa el endpoint de marcar como importante
+    // Si no es importante, usa el endpoint de quitar de importantes
+    const endpoint = important 
+      ? `${this.endpoint}/${reportId}/important`
+      : `${this.endpoint}/${reportId}/NotImportant`;
+      
+    return this.apiService.put<any>(endpoint, { important }, { headers });
   }
 }
