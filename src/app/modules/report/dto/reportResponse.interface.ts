@@ -23,8 +23,8 @@ export interface Category {
 }
 
 export interface Location {
-    latitude:  string;
-    longitude: string;
+    latitude:  number;
+    longitude: number;
 }
 
 export interface StateHistory {

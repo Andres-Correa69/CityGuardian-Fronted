@@ -2,7 +2,6 @@ import { HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from 'src/app/core/service/api.service';
-import { environments } from 'src/environments/environments';
 import { Category } from '../../category/service/category.service';
 import { IReportResponse } from '../dto/reportResponse.interface';
 
@@ -14,8 +13,21 @@ export interface Report {
   category: Category;
   imageUrls: string[];
   location: {
-    latitude: string;
-    longitude: string;
+    latitude: number;
+    longitude: number;
+  } | null;
+  important?: boolean;
+}
+
+export interface ReportRequest {
+  title: string;
+  description: string;
+  categoryId: string;
+  status: string;
+  imageUrls: string[];
+  location: {
+    latitude: number;
+    longitude: number;
   } | null;
 }
 
@@ -31,7 +43,7 @@ export class ReportService {
     return this.apiService.get<Category[]>(this.categoryEndpoint);
   }
 
-  createReport(report: Report, images: File[]): Observable<any> {
+  createReport(report: ReportRequest, images: File[]): Observable<any> {
     const token = localStorage.getItem('AuthToken');
     const formData = new FormData();
 
@@ -47,7 +59,7 @@ export class ReportService {
     }
 
     // No establecemos ningún Content-Type, dejamos que el navegador lo maneje
-    return this.apiService.post<any>(`${this.endpoint}/create`, formData, {
+    return this.apiService.postFormData<any>(`${this.endpoint}/create`, formData, {
       headers: new HttpHeaders({
         'Authorization': `Bearer ${token}`
       })
@@ -69,5 +81,64 @@ export class ReportService {
       'Authorization': `Bearer ${token}`
     });
     return this.apiService.get<IReportResponse>(`${this.endpoint}/${id}`, { headers });
+  }
+
+  verifyReport(id: string): Observable<any> {
+    const token = localStorage.getItem('AuthToken');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.apiService.patch(`${this.endpoint}/${id}/verify`, {}, { headers });
+  }
+
+  getReportesCercanos(latitud: number, longitud: number): Observable<Report[]> {
+    const token = localStorage.getItem('AuthToken');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.apiService.get<Report[]>(
+      `${this.endpoint}/nearby?latitud=${latitud}&longitud=${longitud}`,
+      { headers }
+    );
+  }
+    
+
+  rejectReport(id: string, rejectReason: string): Observable<any> {
+    const token = localStorage.getItem('AuthToken');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.apiService.patch(`${this.endpoint}/${id}/reject?rejectReason=${encodeURIComponent(rejectReason)}`, {}, { headers });
+  }
+
+  resolveReport(id: string): Observable<any> {
+    const token = localStorage.getItem('AuthToken');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.apiService.patch(`${this.endpoint}/${id}/resolve`, {}, { headers });
+  }
+
+  reviewReport(id: string): Observable<any> {
+    const token = localStorage.getItem('AuthToken');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.apiService.patch(`${this.endpoint}/${id}/review`, {}, { headers });
+  }
+
+  markAsImportant(reportId: string, important: boolean = true): Observable<any> {
+    const token = localStorage.getItem('AuthToken');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    
+    // Si es importante, usa el endpoint de marcar como importante
+    // Si no es importante, usa el endpoint de quitar de importantes
+    const endpoint = important 
+      ? `${this.endpoint}/${reportId}/important`
+      : `${this.endpoint}/${reportId}/NotImportant`;
+      
+    return this.apiService.put<any>(endpoint, { important }, { headers });
   }
 }

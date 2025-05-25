@@ -8,25 +8,16 @@
   <!-- Contenido principal del dashboard -->
   <div class="dashboard-content">
     <!-- Sección de resumen visible para todos -->
-    <div class="card">
+    <!-- <div class="card">
       <h2>Resumen de Actividad</h2>
       <p>Aquí podrás ver un resumen de tus actividades recientes.</p>
-    </div>
+    </div> -->
 
     <!-- Sección de estadísticas solo visible con permiso -->
-    <div class="card" *appPermission="'canViewStatistics'">
+    <!-- <div class="card" *appPermission="'canViewStatistics'">
       <h2>Estadísticas</h2>
       <p>Estadísticas detalladas de la plataforma.</p>
-    </div>
-
-    <!-- Sección de gestión solo visible con permiso -->
-    <div class="card" *appPermission="'canManageUsers'">
-      <h2>Gestión de Usuarios</h2>
-      <p>Panel de control para gestionar usuarios del sistema.</p>
-      <button class="admin-button" (click)="verMas()">
-        Ver más detalles
-      </button>
-    </div>
+    </div> -->
 
     <!-- Sección de reportes -->
     <div class="card" *appPermission="'canViewReports'">

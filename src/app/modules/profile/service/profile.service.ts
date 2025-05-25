@@ -18,6 +18,29 @@ export class ProfileService {
         const headers = new HttpHeaders({
             'Authorization': `Bearer ${token}`
         });
-        return this.apiService.get<User>(this.endpoint + '/profile', { headers });
+        return this.apiService.get<User>(`${this.endpoint}/profile`, { headers });
+    }
+
+    updateProfile(profileData: Partial<User>): Observable<User> {
+        const token = localStorage.getItem('AuthToken');
+        if (!token) {
+            throw new Error('No hay token de autenticación');
+        }
+
+        const headers = new HttpHeaders()
+            .set('Authorization', `Bearer ${token}`)
+            .set('Content-Type', 'application/json');
+
+        return this.apiService.patch<User>(`${this.endpoint}/update`, profileData, {
+            headers: headers
+        });
+    }
+
+    deleteProfile(): Observable<void> {
+        const token = localStorage.getItem('AuthToken');
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
+        return this.apiService.delete<void>(`${this.endpoint}/delete`, { headers });
     }
 }

@@ -36,6 +36,23 @@ export class ApiService {
   }
 
   post<T>(endpoint: string, body: any, options: any = {}) {
+    const requestOptions = {
+      ...options,
+      headers: options.headers || new HttpHeaders()
+    };
+
+    return this.http.post<T>(`${this.baseUrl}${endpoint}`, body, requestOptions)
+      .pipe(
+        map(response => response as T),
+        catchError(this.handleError)
+      );
+  }
+
+  postFormData<T>(endpoint: string, body: any, options: any = {}) {
+    console.log('URL de la petición:', `${this.baseUrl}${endpoint}`);
+    console.log('Headers en la petición:', options.headers);
+    console.log('Body de la petición:', body);
+
     // Si es FormData, no establecemos Content-Type
     if (body instanceof FormData) {
       return this.http.post<T>(`${this.baseUrl}${endpoint}`, body, options)
@@ -54,6 +71,41 @@ export class ApiService {
     };
 
     return this.http.post<T>(`${this.baseUrl}${endpoint}`, body, defaultOptions)
+      .pipe(
+        map(response => response as T),
+        catchError(this.handleError)
+      );
+  }
+
+  patch<T>(endpoint: string, body: any, options: any = {}) {
+    const requestOptions = {
+      ...options,
+      headers: options.headers || new HttpHeaders()
+    };
+
+    return this.http.patch<T>(`${this.baseUrl}${endpoint}`, body, requestOptions)
+      .pipe(
+        map(response => response as T),
+        catchError(this.handleError)
+      );
+  }
+
+  put<T>(endpoint: string, body: any, options: any = {}) {
+    const requestOptions = {
+      ...options,
+      headers: options.headers || new HttpHeaders()
+    };
+
+    return this.http.put<T>(`${this.baseUrl}${endpoint}`, body, requestOptions)
+      .pipe(
+        map(response => response as T),
+        catchError(this.handleError)
+      );
+  }
+
+
+  delete<T>(endpoint: string, options: any = {}) {
+    return this.http.delete<T>(`${this.baseUrl}${endpoint}`, options)
       .pipe(
         map(response => response as T),
         catchError(this.handleError)

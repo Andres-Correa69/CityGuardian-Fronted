@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MapService } from 'src/app/modules/map/service/map.service';
-import { ReportService, Report } from '../../service/report.service';
+import { ReportService, Report, ReportRequest } from '../../service/report.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalDesignService } from 'src/app/shared/ui/modals/modal-design/modal-design.service';
@@ -8,6 +8,7 @@ import { LoaderService } from 'src/app/shared/ui/loading/loader/loader.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Category } from 'src/app/modules/category/service/category.service';
 import { Router } from '@angular/router';
+import { RoleService } from '@core/service/role.service';
 
 @Component({
   selector: 'app-report-index',
@@ -23,6 +24,7 @@ export class ReportIndexComponent implements OnInit {
   private loaderService = inject(LoaderService);
   private ngbModal = inject(NgbModal);
   private router = inject(Router);
+  private roleService = inject(RoleService);
 
   @ViewChild('createReportTemplate') createReportTemplate!: TemplateRef<any>;
 
@@ -40,15 +42,16 @@ export class ReportIndexComponent implements OnInit {
       description: ''
     },
     imageUrls: [],
-    location: {
-      latitude: '',
-      longitude: ''
-    }
+    location: null
   };
 
   ngOnInit(): void {
     this.loadCategories();
     this.loadReports();
+  }
+
+  canCreateReports() {
+    return this.roleService.canCreateReports();
   }
 
   loadCategories(): void {
@@ -97,7 +100,15 @@ export class ReportIndexComponent implements OnInit {
 
   createReport(): void {
     this.loaderService.showLoading();
-    this.reportService.createReport(this.newReport, this.selectedImages).subscribe({
+    const reportRequest: ReportRequest = {
+      title: this.newReport.title,
+      description: this.newReport.description,
+      categoryId: this.newReport.category.id,
+      status: this.newReport.status,
+      imageUrls: this.newReport.imageUrls,
+      location: this.newReport.location
+    };
+    this.reportService.createReport(reportRequest, this.selectedImages).subscribe({
       next: (response) => {
         console.log('Reporte creado:', response);
         this.loadReports();
@@ -128,10 +139,7 @@ export class ReportIndexComponent implements OnInit {
         description: ''
       },
       imageUrls: [],
-      location: {
-        latitude: '',
-        longitude: ''
-      }
+      location: null
     };
     this.selectedImages = [];
   }

@@ -23,6 +23,13 @@
                 <div class="col-md-8">
                     <div>
                         <span class="badge bg-info text-dark">{{ report.status }}</span>
+                        <button class="btn ms-2" 
+                                [class.btn-warning]="report.important"
+                                [class.btn-outline-warning]="!report.important"
+                                (click)="toggleImportant()">
+                            <i class="bi" [class.bi-star-fill]="report.important" [class.bi-star]="!report.important"></i>
+                            {{ report.important ? 'Importante' : 'Marcar como importante' }}
+                        </button>
                     </div>
                     <div>
                         <strong>Categoría:</strong> {{ report.category.name }}<br>
@@ -38,6 +45,30 @@
                         </span>
                     </div>
                 </div>
+                <div class="col-md-4">
+                    <div class="d-flex flex-column gap-2">
+                        <button class="btn btn-primary" 
+                                [disabled]="isButtonDisabled('VERIFIED')"
+                                (click)="verifyReport()">
+                            <i class="bi bi-check-circle"></i> Verificar
+                        </button>
+                        <button class="btn btn-danger" 
+                                [disabled]="isButtonDisabled('REJECTED')"
+                                (click)="openRejectModal(rejectModal)">
+                            <i class="bi bi-x-circle"></i> Rechazar
+                        </button>
+                        <button class="btn btn-success" 
+                                [disabled]="isButtonDisabled('RESOLVED')"
+                                (click)="resolveReport()">
+                            <i class="bi bi-check-circle-fill"></i> Resolver
+                        </button>
+                        <button class="btn btn-info" 
+                                [disabled]="isButtonDisabled('CREATED')"
+                                (click)="reviewReport()">
+                            <i class="bi bi-arrow-clockwise"></i> Enviar a Revisión
+                        </button>
+                    </div>
+                </div>
             </div>
             <hr>
             <div class="mb-4">
@@ -49,9 +80,12 @@
             <div class="mb-4">
                 <h5>Estado</h5>
                 <div class="card p-3" style="background: #f8fafc; border-radius: 12px;">
-                    <div *ngFor="let state of report.stateHistory; let last = last" class="d-flex align-items-start mb-3 position-relative" [ngStyle]="{'padding-bottom': !last ? '18px' : '0'}">
+                    <div *ngFor="let state of report.stateHistory; let last = last"
+                        class="d-flex align-items-start mb-3 position-relative"
+                        [ngStyle]="{'padding-bottom': !last ? '18px' : '0'}">
                         <!-- Línea vertical para conectar los estados -->
-                        <div style="width: 24px; display: flex; flex-direction: column; align-items: center; position: relative;">
+                        <div
+                            style="width: 24px; display: flex; flex-direction: column; align-items: center; position: relative;">
                             <ng-container [ngSwitch]="state.status">
                                 <span *ngSwitchCase="'Creado'">
                                     <i class="bi bi-circle" style="color: #b0b0b0; font-size: 1.5rem;"></i>
@@ -70,7 +104,8 @@
                                 </span>
                             </ng-container>
                             <!-- Línea vertical solo si no es el último -->
-                            <div *ngIf="!last" style="width: 2px; height: 32px; background: #d1d5db; margin-top: 2px;"></div>
+                            <div *ngIf="!last" style="width: 2px; height: 32px; background: #d1d5db; margin-top: 2px;">
+                            </div>
                         </div>
                         <div class="ms-3 flex-grow-1">
                             <div class="fw-semibold" style="font-size: 1.08rem;">
@@ -90,6 +125,24 @@
             <!-- Sección del mapa - solo si hay ubicación -->
             <div *ngIf="report.location && report.location.latitude && report.location.longitude">
                 <h5>Ubicación en el mapa</h5>
+
+                <div class="mb-3">
+                    <button class="btn btn-primary me-2" (click)="mostrarReportesCercanos()"
+                        *ngIf="!mostrandoReportesCercanos">
+                        Ver Reportes Cercanos
+                    </button>
+
+                    <button class="btn btn-warning me-2" (click)="mostrarZonasAltoRiesgo()"
+                        *ngIf="mostrandoReportesCercanos && !mostrandoZonasRiesgo">
+                        Ver Zonas de Alto Riesgo
+                    </button>
+
+                    <button class="btn btn-secondary" (click)="volverAMapaOriginal()"
+                        *ngIf="mostrandoReportesCercanos || mostrandoZonasRiesgo">
+                        Volver al Mapa Original
+                    </button>
+                </div>
+
                 <div id="mapa-detalle" style="height: 300px; width: 100%; border-radius: 8px;"></div>
             </div>
         </div>
@@ -98,3 +151,21 @@
         </div>
     </div>
 </div>
+
+<!-- Modal de Rechazo -->
+<ng-template #rejectModal>
+    <div class="modal-header">
+        <h5 class="modal-title">Rechazar Reporte</h5>
+        <button type="button" class="btn-close" (click)="modalService.dismissAll()"></button>
+    </div>
+    <div class="modal-body">
+        <div class="mb-3">
+            <label for="rejectReason" class="form-label">Motivo del rechazo:</label>
+            <textarea class="form-control" id="rejectReason" rows="3" [(ngModel)]="rejectReason" required></textarea>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modalService.dismissAll()">Cancelar</button>
+        <button type="button" class="btn btn-danger" (click)="rejectReport()">Rechazar</button>
+    </div>
+</ng-template>

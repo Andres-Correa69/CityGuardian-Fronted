@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ChatbotComponent } from '../../ui/chatbot/chatbot.component';
 import { AuthService } from 'src/app/modules/auth/service/auth.service';
+import { RoleService } from '@core/service/role.service';
 
 declare var $: any;
 
@@ -17,11 +18,12 @@ declare var $: any;
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'
 })
-export class LayoutComponent implements OnInit{
+export class LayoutComponent implements OnInit {
   isSidebarCollapsed = false;
   private authService = inject(AuthService);
+  private roleService = inject(RoleService);
   private router = inject(Router);
-  
+
   ngOnInit() {
     this.initializeSidebar();
   }
@@ -29,6 +31,10 @@ export class LayoutComponent implements OnInit{
   logout() {
     this.authService.clearSession();
     this.router.navigate(['/login']);
+  }
+
+  canViewCategories() {
+    return this.roleService.canViewCategories();
   }
 
   initializeSidebar() {

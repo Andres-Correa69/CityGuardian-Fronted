@@ -22,7 +22,9 @@ export class RoleService {
       canViewProfile: true,
       canEditProfile: true,
       canViewStatistics: true,
-      canExportData: true
+      canExportData: true,
+      canViewCategories: true,
+      canCreateReports: false,
     },
     CLIENT: {
       canViewDashboard: true,
@@ -34,7 +36,9 @@ export class RoleService {
       canViewProfile: true,
       canEditProfile: true,
       canViewStatistics: false,
-      canExportData: false
+      canExportData: false,
+      canViewCategories: false,
+      canCreateReports: true
     }
   };
 
@@ -93,5 +97,13 @@ export class RoleService {
 
   canExportData(): boolean {
     return this.hasPermission('canExportData');
+  }
+
+  canViewCategories(): boolean {
+    return this.hasPermission('canViewCategories');
+  }
+
+  canCreateReports(): boolean {
+    return this.hasPermission('canCreateReports');
   }
 } 
