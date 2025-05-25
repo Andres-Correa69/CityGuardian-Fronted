@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RoleDirective } from '../../core/directives/role.directive';
 import { PermissionDirective } from '../../core/directives/permission.directive';
 import { RoleService, UserRole } from '../../core/service/role.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,7 +19,9 @@ import { RoleService, UserRole } from '../../core/service/role.service';
 export class DashboardComponent implements OnInit {
   currentRole: UserRole | null = null;
 
-  constructor(private roleService: RoleService) {}
+  private router = inject(Router);
+
+  constructor(private roleService: RoleService) { }
 
   ngOnInit() {
     // Suscribirse a cambios en el rol
@@ -33,7 +36,6 @@ export class DashboardComponent implements OnInit {
   }
 
   gestionarReportes() {
-    // Aquí puedes implementar la lógica para gestionar reportes
-    console.log('Gestionando reportes...');
+    this.router.navigate(['/city-guardian/report']);
   }
 }
