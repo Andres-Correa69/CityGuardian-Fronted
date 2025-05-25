@@ -9,11 +9,12 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Category } from 'src/app/modules/category/service/category.service';
 import { Router } from '@angular/router';
 import { RoleService } from '@core/service/role.service';
+import { LoaderComponent } from "../../../../shared/ui/loading/loader/loader.component";
 
 @Component({
   selector: 'app-report-index',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, LoaderComponent],
   templateUrl: './report-index.component.html',
   styleUrl: './report-index.component.css'
 })
@@ -85,6 +86,7 @@ export class ReportIndexComponent implements OnInit {
       setTimeout(() => {
         this.mapService.crearMapa();
         this.mapService.agregarMarcador().subscribe((marcador) => {
+          console.log('Marcador:', marcador);
           this.newReport.location = {
             latitude: marcador.lat.toString(),
             longitude: marcador.lng.toString()

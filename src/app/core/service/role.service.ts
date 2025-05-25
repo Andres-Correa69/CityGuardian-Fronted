@@ -106,4 +106,12 @@ export class RoleService {
   canCreateReports(): boolean {
     return this.hasPermission('canCreateReports');
   }
+
+  isAdmin(): boolean {
+    return this.getCurrentRole() === 'ADMIN';
+  }
+
+  isClient(): boolean {
+    return this.getCurrentRole() === 'CLIENT';
+  }
 } 

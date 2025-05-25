@@ -101,7 +101,7 @@ export class ReportService {
       { headers }
     );
   }
-    
+
 
   rejectReport(id: string, rejectReason: string): Observable<any> {
     const token = localStorage.getItem('AuthToken');
@@ -132,13 +132,34 @@ export class ReportService {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    
-    // Si es importante, usa el endpoint de marcar como importante
-    // Si no es importante, usa el endpoint de quitar de importantes
-    const endpoint = important 
+
+    const endpoint = important
       ? `${this.endpoint}/${reportId}/important`
       : `${this.endpoint}/${reportId}/NotImportant`;
-      
+
     return this.apiService.put<any>(endpoint, { important }, { headers });
+  }
+
+  updateReport(id: string, report: ReportRequest, images: File[]): Observable<any> {
+    const token = localStorage.getItem('AuthToken');
+    const formData = new FormData();
+
+    // Convertimos el report a Blob para asegurar el tipo correcto
+    const reportBlob = new Blob([JSON.stringify(report)], { type: 'application/json' });
+    formData.append('report', reportBlob, 'report.json');
+
+    if (images && images.length > 0) {
+      images.forEach((image, index) => {
+        // Aseguramos que el archivo mantenga su tipo MIME original
+        formData.append('imagenes', image, image.name);
+      });
+    }
+
+    // No establecemos ningún Content-Type, dejamos que el navegador lo maneje
+    return this.apiService.putFormData<any>(`${this.endpoint}/${id}`, formData, {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${token}`
+      })
+    });
   }
 }

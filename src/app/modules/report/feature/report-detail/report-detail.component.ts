@@ -1,35 +1,86 @@
-import { Component, OnInit, inject, AfterViewInit } from '@angular/core';
+import { Component, OnInit, inject, AfterViewInit, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ReportService, Report } from '../../service/report.service';
+import { ReportService, Report, ReportRequest } from '../../service/report.service';
 import { LoaderService } from 'src/app/shared/ui/loading/loader/loader.service';
 import { MapService } from 'src/app/modules/map/service/map.service';
-import { IReportResponse } from '../../dto/reportResponse.interface';
+import { Category, IReportResponse } from '../../dto/reportResponse.interface';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
+import { RoleService } from '@core/service/role.service';
+import { ProfileService } from 'src/app/modules/profile/service/profile.service';
+import { User } from 'src/app/modules/auth/dto/loginResponse.interface';
+import { LoaderComponent } from "../../../../shared/ui/loading/loader/loader.component";
+import { ModalDesignService } from 'src/app/shared/ui/modals/modal-design/modal-design.service';
 
 @Component({
   selector: 'app-report-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LoaderComponent],
   templateUrl: './report-detail.component.html',
   styleUrl: './report-detail.component.css'
 })
 export class ReportDetailComponent implements OnInit, AfterViewInit {
+
+  @ViewChild('editReportTemplate') editReportTemplate!: TemplateRef<any>;
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private roleService = inject(RoleService);
   private reportService = inject(ReportService);
   private loaderService = inject(LoaderService);
+  private profileService = inject(ProfileService);
   private mapService = inject(MapService);
   public modalService = inject(NgbModal);
+  private modalDesignService = inject(ModalDesignService);
 
   report: IReportResponse | null = null;
+  selectedImages: File[] = [];
   rejectReason: string = '';
   mostrandoReportesCercanos = false;
   mostrandoZonasRiesgo = false;
+  isClient = false;
+  profile: User | null = null;
+  categories: Category[] = [];
+
+  newReport: Report = {
+    id: '',
+    title: '',
+    description: '',
+    status: 'CREATED',
+    category: {
+      id: '',
+      name: '',
+      description: ''
+    },
+    imageUrls: [],
+    location: null
+  };
 
   ngOnInit(): void {
+    this.loadCategories();
     this.loadReport();
+    this.isClient = this.roleService.isClient();
+    this.profileService.getProfile().subscribe({
+      next: (profile) => {
+        this.profile = profile;
+      }
+    });
+  }
+
+  loadCategories(): void {
+    this.reportService.getCategories().subscribe({
+      next: (data) => {
+        this.categories = data;
+      }
+    });
+  }
+
+  onFileSelected(event: any): void {
+    this.selectedImages = Array.from(event.target.files);
+  }
+
+  closeModal(): void {
+    this.modalService.dismissAll();
   }
 
   ngAfterViewInit(): void {
@@ -38,6 +89,77 @@ export class ReportDetailComponent implements OnInit, AfterViewInit {
     if (this.report && this.report.location) {
       this.initMap();
     }
+  }
+
+  showVerifyButton(): boolean {
+    return this.roleService.isAdmin() && this.report?.status === 'CREATED';
+  }
+
+  showRejectButton(): boolean {
+    return this.roleService.isAdmin() && this.report?.status !== 'VERIFIED' && this.report?.status !== 'RESOLVED';
+  }
+
+  showResolveButton(): boolean {
+    return (this.roleService.isAdmin() && this.report?.status === 'VERIFIED') || this.roleService.isClient();
+  }
+
+  showReviewButton(): boolean {
+    return this.roleService.isClient() && this.report?.status === 'REJECTED';
+  }
+
+  showEditButton(): boolean {
+    return this.isClient && this.profile?.id === this.report?.userId;
+  }
+
+  editReport(): void {
+    const modalRef = this.modalDesignService.openModal(this.editReportTemplate, 'lg', 'Editar Reporte');
+
+    // Esperamos a que el modal esté completamente abierto
+    modalRef.shown.subscribe(() => {
+      // Inicializamos el mapa después de que el modal esté visible
+      setTimeout(() => {
+        this.mapService.crearMapa();
+        this.mapService.agregarMarcador().subscribe((marcador) => {
+          
+          this.newReport.location = {
+            latitude: marcador.lat.toString(),
+            longitude: marcador.lng.toString()
+          }
+        });
+      }, 100);
+    });
+  }
+
+  getTranslationOfStatus(status: string): string {
+    switch (status) {
+      case 'CREATED':
+        return 'Creado';
+      case 'VERIFIED':
+        return 'Verificado';
+      case 'RESOLVED':
+        return 'Resuelto';
+      case 'REJECTED':
+        return 'Rechazado';
+      default:
+        return status;
+    }
+  }
+
+  private resetForm(): void {
+    this.newReport = {
+      id: '',
+      title: '',
+      description: '',
+      status: 'CREATED',
+      category: {
+        id: '',
+        name: '',
+        description: ''
+      },
+      imageUrls: [],
+      location: null
+    };
+    this.selectedImages = [];
   }
 
   loadReport(): void {
@@ -49,6 +171,7 @@ export class ReportDetailComponent implements OnInit, AfterViewInit {
         next: (data) => {
           this.report = data;
           this.loaderService.hideLoading();
+          this.newReport = structuredClone(data);
           setTimeout(() => this.initMap(), 100); // Espera a que el DOM esté listo
         },
         error: (error) => {
@@ -137,11 +260,9 @@ export class ReportDetailComponent implements OnInit, AfterViewInit {
       const newImportantState = !this.report.important;
       this.reportService.markAsImportant(this.report.id, newImportantState).subscribe({
         next: () => {
-          // Actualizar el estado local
           if (this.report) {
             this.report.important = newImportantState;
           }
-          alert(this.report?.important ? 'Reporte marcado como importante' : 'Reporte desmarcado como importante');
         },
         error: (error) => {
           console.error('Error al cambiar el estado de importante:', error);
@@ -157,7 +278,6 @@ export class ReportDetailComponent implements OnInit, AfterViewInit {
       this.reportService.verifyReport(this.report.id).subscribe({
         next: () => {
           this.loadReport();
-          alert('Reporte verificado exitosamente');
         },
         error: (error) => {
           console.error('Error al verificar el reporte:', error);
@@ -180,7 +300,6 @@ export class ReportDetailComponent implements OnInit, AfterViewInit {
           this.modalService.dismissAll();
           this.loadReport();
           this.rejectReason = '';
-          alert('Reporte rechazado exitosamente');
         },
         error: (error) => {
           console.error('Error al rechazar el reporte:', error);
@@ -199,7 +318,6 @@ export class ReportDetailComponent implements OnInit, AfterViewInit {
       this.reportService.resolveReport(this.report.id).subscribe({
         next: () => {
           this.loadReport();
-          alert('Reporte resuelto exitosamente');
         },
         error: (error) => {
           console.error('Error al resolver el reporte:', error);
@@ -216,7 +334,6 @@ export class ReportDetailComponent implements OnInit, AfterViewInit {
       this.reportService.reviewReport(this.report.id).subscribe({
         next: () => {
           this.loadReport();
-          alert('Reporte enviado a revisión exitosamente');
         },
         error: (error) => {
           console.error('Error al enviar el reporte a revisión:', error);
@@ -229,5 +346,31 @@ export class ReportDetailComponent implements OnInit, AfterViewInit {
 
   isButtonDisabled(status: string): boolean {
     return this.report?.status === status;
+  }
+
+  upadteReport(): void {
+    this.loaderService.showLoading();
+    if (!this.report) {
+      return;
+    }
+    const reportRequest: ReportRequest = {
+      title: this.newReport.title,
+      description: this.newReport.description,
+      categoryId: this.newReport.category.id,
+      status: this.newReport.status,
+      imageUrls: this.newReport.imageUrls,
+      location: this.newReport.location
+    };
+    this.reportService.updateReport(this.report.id, reportRequest, this.selectedImages).subscribe({
+      next: (response) => {
+        console.log('Reporte actualizado:', response);
+        this.loadReport();
+        this.loaderService.hideLoading();
+        this.modalDesignService.closeModal();
+      },
+      error: (error) => {
+        this.loaderService.hideLoading();
+      }
+    });
   }
 }

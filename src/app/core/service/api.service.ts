@@ -90,6 +90,35 @@ export class ApiService {
       );
   }
 
+  putFormData<T>(endpoint: string, body: any, options: any = {}) {
+    console.log('URL de la petición:', `${this.baseUrl}${endpoint}`);
+    console.log('Headers en la petición:', options.headers);
+    console.log('Body de la petición:', body);
+
+    // Si es FormData, no establecemos Content-Type
+    if (body instanceof FormData) {
+      return this.http.put<T>(`${this.baseUrl}${endpoint}`, body, options)
+        .pipe(
+          map(response => response as T),
+          catchError(this.handleError)
+        );
+    }
+
+    // Para otros tipos de datos, establecemos el Content-Type por defecto
+    const defaultOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        ...options.headers
+      })
+    };
+
+    return this.http.put<T>(`${this.baseUrl}${endpoint}`, body, defaultOptions)
+      .pipe(
+        map(response => response as T),
+        catchError(this.handleError)
+      );
+  }
+
   put<T>(endpoint: string, body: any, options: any = {}) {
     const requestOptions = {
       ...options,
